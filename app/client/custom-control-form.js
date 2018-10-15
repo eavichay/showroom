@@ -49,19 +49,21 @@ export class CustomControlForm extends HTMLElement {
             type.value = type.values().next().value;
             break;
           default:
-            // object
-            const proxy = new Proxy(type, {
-              set: (_, subProperty, value) => {
-                type[subProperty] = value;
-                targetComponent[prop] = type;
-                return true;
-              },
-              get: (subProperty) => {
-                return type[subProperty];
-              }
-            });
-            input = new CustomControlForm(proxy, {properties: type}, true);
-            input.setAttribute('type', 'object');
+            input = document.createElement('button');
+            input.innerText = 'Edit ' + type.constructor.name;
+            input.onclick = () => {
+              this.dispatchEvent(new CustomEvent('open-json-editor',
+              {
+                bubbles: true,
+                composed: true,
+                detail: {
+                  data: targetComponent[prop],
+                  callback: (value) => {
+                    this.targetComponent[prop] = value;
+                  }
+                }
+              }));
+            }
         }
         const label = document.createElement('label');
         label.innerText = prop;

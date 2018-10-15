@@ -1,4 +1,5 @@
 import './component-renderer.js';
+import './showroom-json-editor.js';
 import { CustomControlForm } from './custom-control-form.js';
 
 
@@ -39,7 +40,7 @@ export default class ComponentDashboard extends HTMLElement {
           display: inline-flex;
           flex-direction: column;
           flex-basis: 45%;
-          overflow: scroll;
+          overflow-y: scroll;
         }
 
         #wrapper {
@@ -49,19 +50,25 @@ export default class ComponentDashboard extends HTMLElement {
           max-height: 50rem;
         }
 
-        #eventLog {
+        #eventLogWrapper {
           position: relative;
-          overflow: scroll;
-          display: inline-flex;
-          flex-direction: column-reverse;
-          justify-content: flex-end;
+          display: block;
           flex-grow: 1;
+          overflow-y: scroll;
+          top: 0;
+          bottom: 0;
         }
 
-        #eventLog input[type="button"] {
+        #eventLog {
+          display: inline-flex;
+          flex-direction: column-reverse;
+          overflow: visible;
+        }
+
+        #eventLogWrapper input[type="button"] {
           position: absolute;
-          right: 0;
-          top: 0;
+          right: 0.5rem;
+          top: 0.5rem;
         }
       </style>
       <div id="renderer-container">
@@ -69,7 +76,10 @@ export default class ComponentDashboard extends HTMLElement {
       </div>
       <div id="wrapper">
         <div id="dashboard"></div>
-        <div id="eventLog"></div>
+        <div id="eventLogWrapper">
+          <div id="eventLog">
+        </div>
+        </div>
       </div>
     `;
     this.renderer = this._.getElementById('renderer');
@@ -79,12 +89,6 @@ export default class ComponentDashboard extends HTMLElement {
 
   get component () {
     return this.renderer.component;
-  }
-
-  addDescription (descriptionText) {
-    const descriptionElement = this._.querySelector('#description') || document.createElement('atricle', {id: 'description'});
-    this.dashboard.appendChild(descriptionElement);
-    descriptionElement.innerHTML = marked(descriptionText);
   }
 
   addCustomForm (formData) {
@@ -113,7 +117,7 @@ export default class ComponentDashboard extends HTMLElement {
       clearButton.type = 'button';
       clearButton.value = 'Clear';
       clearButton.classList.add('btn', 'btn-sm');
-      this.eventLog.appendChild(clearButton);
+      this._.querySelector('#eventLogWrapper').appendChild(clearButton);
       clearButton.onclick = () => {
         while (this.eventLog.childElementCount > 1) {
           this.eventLog.removeChild(this.eventLog.lastElementChild);
@@ -122,15 +126,18 @@ export default class ComponentDashboard extends HTMLElement {
     }
   }
 
-  async loadComponent (modulePath) {
-    const module = await import(modulePath);
-    const { component, description, section, properties, attributes, events } = module.default;
+  setupComponent (module) {
+    const { component, properties, attributes, events } = module;
     this.dashboard.innerHTML = '';
     this.renderer.setAttribute('name', component);
-    this.addDescription(description);
     this.addCustomForm({properties, attributes});
     this.targetComponent = this.renderer.component;
     this.attachEvents(this.targetComponent, events);
+  }
+
+  async loadComponent (modulePath) {
+    const module = await import(modulePath);
+    this.setupComponent(module.default);
   }
 
   static get observedAttributes () {

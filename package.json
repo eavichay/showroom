@@ -1,6 +1,6 @@
 {
   "name": "showroom",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Interactive visual development and testing of custom elements",
   "main": "./app/server/index.js",
   "scripts": {
@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.4.1",
+    "jsoneditor": "^5.24.7",
     "koa": "^2.5.3",
     "koa-static": "^5.0.0",
     "marked": "^0.5.1",

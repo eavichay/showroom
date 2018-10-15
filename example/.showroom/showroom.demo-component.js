@@ -1,5 +1,3 @@
-import '../demo-component.js';
-
 export default {
   section: 'whatever',
   description: `
@@ -12,7 +10,7 @@ console.log('hello');
 *ephasized* text
   `,
   component: 'demo-component',
-  path: '../demo-component.js',
+  path: '/demo-component.js',
   events: ['someevent', 'click'],
   properties: {
     myName: 'Default myName',

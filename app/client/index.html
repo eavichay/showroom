@@ -6,7 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="/milligram.min.css">
   <script src="/marked.min.js"></script>
+  <script src="/jsoneditor.min.js"></script>
   <title>ShowRoom</title>
+  <showroom-json-editor></showroom-json-editor>
   <style>
     html, body {
       display: flex;
@@ -50,9 +52,22 @@
       padding: 1rem;
     }
 
+    .btn-sm {
+      font-size: 8px;
+      height: 1.2rem;
+      line-height: 1rem;
+      padding: 0 0.3rem;
+      float: right;
+      top: 7px;
+      position: relative;
+      letter-spacing: 0.05rem;
+      font-weight: 400;
+    }
+
   </style>
 </head>
 <body>
+  <component-description></component-description>
   <h1>Showroom <span id="component-name"></span></h1>
   <div class="hbox">
     <div id="component-list">
@@ -65,9 +80,11 @@
   
   <script type="module" src="./component-dashboard.js"></script>
   <script type="module" src="./component-renderer.js"></script>
+  <script type="module" src="./component-description.js"></script>
   <script type="module">
     const input = document.getElementById('componentPathInput');
     const dashboard = document.querySelector('component-dashboard');
+    const descriptionView = document.querySelector('component-description');
     const sections = {general: []};
 
     const ul = (section) => {
@@ -86,24 +103,66 @@
       return el;
     };
 
+    let currentModule;
+
     const loadComponents = async () => {
-      const components = await (await fetch('/components')).json();
+      const components = await (await fetch('/showroom-components')).json();
       for (let filename of components) {
-        const { component, path, section }  = (await import('/.showroom/' + filename)).default;
+        const module = (await import('/.showroom/' + filename)).default;
+        currentModule = module;
+        const { component, path, section, description }  = module;
+
         if (path) {
           await import(path);
         }
         const li = document.createElement('li');
-        li.innerText = component;
+        const s = document.createElement('span');
+        s.innerText = component;
+        li.appendChild(s);
+        if (description) {
+          const btn = document.createElement('button');
+          btn.classList.add('btn-sm');
+          btn.innerText = 'Description';
+          li.appendChild(btn);
+          btn.onclick = () => {
+            descriptionView.setContent(description);
+          }
+        }
+        
         ul(section || 'general').appendChild(li);
-        li.onclick = () => {
-          dashboard.setAttribute('descriptor', '/.showroom/' + component + '.js');
+        s.onclick = () => {
+          dashboard.setupComponent(module);
           document.querySelector('#component-name').innerText = `(${component})`;
         }
       }
     }
 
-    loadComponents();
+    const createError = (err) => {
+      return `
+# _Oops_, Error.
+
+> The error can be either in the component descriptor file or the component runtime.
+> Perhaps the browser console can provide additional information.
+
+---
+
+### Type
+**${err.name}: ${err.message}**
+
+### Stack
+${err.stack}
+
+### Module
+\`\`\`json
+${JSON.stringify(currentModule, null, 2)}
+\`\`\`
+      `
+    }
+
+    loadComponents().catch(err => {
+      descriptionView.setContent(createError(err));
+      throw err;
+    })
   </script>
 </body>
 </html>
