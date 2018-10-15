@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="/milligram.min.css">
+  <script src="/marked.min.js"></script>
+  <title>ShowRoom</title>
+  <style>
+    html, body {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+    }
+    .hbox {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .vbox {
+      display: flex;
+      flex-direction: column;
+    }
+
+    div {
+      display: inline-flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    #component-list {
+      flex-grow: 0;
+      padding: 1rem;
+      border-right: 2px solid black;
+      min-width: 25rem;
+    }
+
+    #component-list ul {
+      list-style-type: none;
+      margin: 0;
+      padding-left: 2rem;
+    }
+
+    #component-list details[open] ul {
+      border-left: 2px solid grey;
+    }
+
+    #main-view {
+      padding: 1rem;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Showroom <span id="component-name"></span></h1>
+  <div class="hbox">
+    <div id="component-list">
+      <h3>Component List</h3>
+    </div>
+    <div id="main-view">
+        <component-dashboard></component-dashboard>
+    </div>
+  </div>
+  
+  <script type="module" src="./component-dashboard.js"></script>
+  <script type="module" src="./component-renderer.js"></script>
+  <script type="module">
+    const input = document.getElementById('componentPathInput');
+    const dashboard = document.querySelector('component-dashboard');
+    const sections = {general: []};
+
+    const ul = (section) => {
+      let el = document.getElementById('section-' + section);
+      if (!el) {
+        const wrapper = document.createElement('details');
+        const summary = document.createElement('summary');
+        wrapper.setAttribute('open', null);
+        summary.innerText = section;
+        el = document.createElement('ul');
+        el.setAttribute('id', 'section-' + section);
+        wrapper.appendChild(summary);
+        wrapper.appendChild(el);
+        document.querySelector('#component-list').appendChild(wrapper);
+      }
+      return el;
+    };
+
+    const loadComponents = async () => {
+      const components = await (await fetch('/components')).json();
+      for (let filename of components) {
+        const { component, path, section }  = (await import('/.showroom/' + filename)).default;
+        if (path) {
+          await import(path);
+        }
+        const li = document.createElement('li');
+        li.innerText = component;
+        ul(section || 'general').appendChild(li);
+        li.onclick = () => {
+          dashboard.setAttribute('descriptor', '/.showroom/' + component + '.js');
+          document.querySelector('#component-name').innerText = `(${component})`;
+        }
+      }
+    }
+
+    loadComponents();
+  </script>
+</body>
+</html>
