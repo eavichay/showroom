@@ -119,9 +119,7 @@ export default class ComponentDashboard extends HTMLElement {
       clearButton.classList.add('btn', 'btn-sm');
       this._.querySelector('#eventLogWrapper').appendChild(clearButton);
       clearButton.onclick = () => {
-        while (this.eventLog.childElementCount > 1) {
-          this.eventLog.removeChild(this.eventLog.lastElementChild);
-        }
+        this.eventLog.innerHTML = '';
       }
     }
   }
@@ -132,7 +130,10 @@ export default class ComponentDashboard extends HTMLElement {
     this.renderer.setAttribute('name', component);
     this.addCustomForm({properties, attributes});
     this.targetComponent = this.renderer.component;
-    this.attachEvents(this.targetComponent, events);
+    requestAnimationFrame( () => {
+      this.attachEvents(this.targetComponent, events);  
+    });
+    
   }
 
   async loadComponent (modulePath) {
