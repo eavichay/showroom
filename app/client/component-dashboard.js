@@ -43,11 +43,17 @@ export default class ComponentDashboard extends HTMLElement {
           overflow-y: scroll;
         }
 
+        :host([collapsed]) #wrapper {
+          max-height: 0rem;
+        }
+
         #wrapper {
           border-top: 1px solid black;
           display: inline-flex;
           flex-direction: row;
           max-height: 50rem;
+          position: relative;
+          transition: 1250ms ease-in-out max-height;
         }
 
         #eventLogWrapper {
@@ -70,11 +76,24 @@ export default class ComponentDashboard extends HTMLElement {
           right: 0.5rem;
           top: 0.5rem;
         }
+
+        #toggle {
+          font-size: 1.2rem;
+          z-index: 1;
+          height: 2rem;
+          width: 8rem;
+          position: absolute;
+          left: calc(50% - 3rem);
+          top: -1rem;
+          padding: 0;
+          line-height: 1rem;
+        }
       </style>
       <div id="renderer-container">
         <component-renderer id="renderer"></component-renderer>
       </div>
       <div id="wrapper">
+        <button id="toggle">↕</button>
         <div id="dashboard"></div>
         <div id="eventLogWrapper">
           <div id="eventLog">
@@ -85,6 +104,14 @@ export default class ComponentDashboard extends HTMLElement {
     this.renderer = this._.getElementById('renderer');
     this.dashboard = this._.getElementById('dashboard');
     this.eventLog = this._.getElementById('eventLog');
+    this.toggle = this._.getElementById('toggle');
+    this.toggle.onclick = () => {
+      if (this.hasAttribute('collapsed')) {
+        this.removeAttribute('collapsed');
+      } else {
+        this.setAttribute('collapsed', '');
+      }
+    }
   }
 
   get component () {
@@ -119,20 +146,37 @@ export default class ComponentDashboard extends HTMLElement {
       clearButton.classList.add('btn', 'btn-sm');
       this._.querySelector('#eventLogWrapper').appendChild(clearButton);
       clearButton.onclick = () => {
-        while (this.eventLog.childElementCount > 1) {
-          this.eventLog.removeChild(this.eventLog.lastElementChild);
-        }
+        this.eventLog.innerHTML = '';
       }
     }
   }
 
+  addInnerHTMLForm (innerHTML) {
+    if (innerHTML) {
+      const editor = document.createElement('textarea');
+      const label = document.createElement('h3')
+      label.innerText = 'Inner HTML';
+      this.dashboard.appendChild(label);
+      this.dashboard.appendChild(editor);
+      editor.value = innerHTML;
+      editor.onblur = editor.onchange = () => {
+        this.targetComponent.innerHTML = editor.value;
+      };
+      editor.onblur();
+    }
+  }
+
   setupComponent (module) {
-    const { component, properties, attributes, events } = module;
+    const { component, properties, attributes, events, innerHTML } = module;
     this.dashboard.innerHTML = '';
     this.renderer.setAttribute('name', component);
-    this.addCustomForm({properties, attributes});
     this.targetComponent = this.renderer.component;
-    this.attachEvents(this.targetComponent, events);
+    this.addCustomForm({properties, attributes});
+    this.addInnerHTMLForm(innerHTML);
+    requestAnimationFrame( () => {
+      this.attachEvents(this.targetComponent, events);
+    });
+    
   }
 
   async loadComponent (modulePath) {

@@ -74,16 +74,9 @@ async function startServer () {
 
   console.log('Expecting Showroom files to be at', global.showroom.path + '/.showroom')
   await search(path.resolve(process.cwd(), global.showroom.path, '.showroom'));
-  console.log(chalk.yellow(`${componentList.length} Total file(s) found`));
 
-  app.use(async (ctx, next) => {
-    console.log('PATH: // ', ctx.path);
-    await next();
-  });
-  
 
   allowedPaths.forEach(path => {
-    console.log(path);
     app.use(serve(path, {hidden: true}));
   });
 

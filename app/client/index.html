@@ -110,19 +110,24 @@
       for (let filename of components) {
         const module = (await import('/.showroom/' + filename)).default;
         currentModule = module;
-        const { component, path, section, description }  = module;
+        const { component, path, section, description, descriptionURL }  = module;
 
         if (path) {
           await import(path);
         }
+
         const li = document.createElement('li');
         const s = document.createElement('span');
         s.innerText = component;
+        s.style.marginRight = '0.5rem';
         li.appendChild(s);
-        if (description) {
-          const btn = document.createElement('button');
-          btn.classList.add('btn-sm');
-          btn.innerText = 'Description';
+        const btn = document.createElement('button');
+        btn.classList.add('btn', 'btn-sm');
+        btn.innerText = 'DOCS';
+        if (descriptionURL) {
+          li.appendChild(btn);
+          btn.onclick = () => window.open(descriptionURL, '_blank');
+        } else if (description) {
           li.appendChild(btn);
           btn.onclick = () => {
             descriptionView.setContent(description);
