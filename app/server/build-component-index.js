@@ -38,7 +38,7 @@ const doSearch = async (path) => {
       if (filename !== 'node_modules') {
         await search(path + '/' + filename)
       } 
-    } else if (stats.isFile()) {
+    } else if (stats.isFile() && filename !== 'config.js') {
       info(`\t${filename}`);
       componentList.push(filename);
     }

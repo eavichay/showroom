@@ -53,5 +53,16 @@ component.mission = 'Save the world' // will trigger *taskselected* event
     'accent-color': 'red',
     'text-color': 'white',
   },
-  innerHTML: `<img width="64" height="64" src="/avengers.png">`
+  innerHTML: `<img width="64" height="64" src="/avengers.png">`,
+  outerHTML: /*html*/`
+    <div>
+      <style>
+        div {
+          border: 1px solid black;
+        }
+      </style>
+      <h5>Example wrapping html content</h5>
+      <showroom-mount-point></showroom-mount-point>
+    </div>
+    `
 }

@@ -85,6 +85,10 @@
         <component-dashboard></component-dashboard>
     </div>
   </div>
+
+  <script>
+    window.showroomGlobalStyles = [];
+  </script>
   
   <script type="module" src="./component-dashboard.js"></script>
   <script type="module" src="./component-renderer.js"></script>
@@ -112,6 +116,24 @@
     };
 
     let currentModule;
+
+    const loadConfig = async () => {
+      const { scripts, styles } = (await import('/showroom-config')).default;
+      if (styles) {
+        window.showroomGlobalStyles = styles.map(path => {
+          const e = document.createElement('link');
+          e.setAttribute('rel', 'stylesheet');
+          e.href = path;
+          return e;
+        });
+      }
+      
+      if (scripts) {
+        for (let path of scripts) {
+          await import(path);
+        }
+      }
+    };
 
     const loadComponents = async () => {
       const components = await (await fetch('/showroom-components')).json();
@@ -172,10 +194,13 @@ ${JSON.stringify(currentModule, null, 2)}
       `
     }
 
-    loadComponents().catch(err => {
-      descriptionView.setContent(createError(err));
-      throw err;
-    })
+    Promise.resolve()
+      .then(() => loadConfig())
+      .then(() => loadComponents())
+      .catch(err => {
+        descriptionView.setContent(createError(err));
+        throw err;
+      })
   </script>
 </body>
 </html>

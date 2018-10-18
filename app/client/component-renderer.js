@@ -1,9 +1,19 @@
 export default class ComponentRenderer extends HTMLElement {
 
-  constructor () {
+  constructor (outerHTML = '<showroom-mount-point></showroom-mount-point>') {
     super();
     this.attachShadow({mode: 'open'});
     this._ = this.shadowRoot;
+    this._.innerHTML = /*html*/`
+      <style>
+      :host {
+        font-family: initial;
+        font-size: initial;
+      }
+      </style>
+      <div id="fallback"></div>
+      ${outerHTML}
+    `;
   }
 
   static get observedAttributes () {
@@ -18,16 +28,13 @@ export default class ComponentRenderer extends HTMLElement {
     const {url, name } = this.attributes;
 
     if (url) await import(url);
-    this._.innerHTML = `
-      <${name.nodeValue}></${name.nodeValue}>
-      <style>
-      :host {
-        font-family: initial;
-        font-size: initial;
-      }
-    </style>
-    `
-    this.component = this._.firstElementChild;
+    
+    const mountpoint = this._.querySelector('showroom-mount-point') || this._.querySelector('#fallback');
+    mountpoint.outerHTML = `<${name.nodeValue}></${name.nodeValue}>`;
+    this.component = this._.querySelector(name.nodeValue);
+    window.showroomGlobalStyles.forEach(styleNode => {
+      this._.appendChild(styleNode);
+    });
   }
 
   setComponentAttribute(attr, value) {

@@ -1,4 +1,4 @@
-import './component-renderer.js';
+import ComponentRenderer from './component-renderer.js';
 import './showroom-json-editor.js';
 import { CustomControlForm } from './custom-control-form.js';
 
@@ -90,7 +90,6 @@ export default class ComponentDashboard extends HTMLElement {
         }
       </style>
       <div id="renderer-container">
-        <component-renderer id="renderer"></component-renderer>
       </div>
       <div id="wrapper">
         <button id="toggle">↕</button>
@@ -101,7 +100,7 @@ export default class ComponentDashboard extends HTMLElement {
         </div>
       </div>
     `;
-    this.renderer = this._.getElementById('renderer');
+    this.rendererContainer = this._.getElementById('renderer-container');
     this.dashboard = this._.getElementById('dashboard');
     this.eventLog = this._.getElementById('eventLog');
     this.toggle = this._.getElementById('toggle');
@@ -159,17 +158,21 @@ export default class ComponentDashboard extends HTMLElement {
       this.dashboard.appendChild(label);
       this.dashboard.appendChild(editor);
       editor.value = innerHTML;
-      editor.onblur = editor.onchange = () => {
+      editor.onchange = () => {
         this.targetComponent.innerHTML = editor.value;
       };
-      editor.onblur();
     }
   }
 
   setupComponent (module) {
-    const { component, properties, attributes, events, innerHTML } = module;
+    const { component, properties, attributes, events, innerHTML, outerHTML } = module;
     this.dashboard.innerHTML = '';
+    if (this.renderer) {
+      this.renderer.remove();
+    }
+    this.renderer = new ComponentRenderer(outerHTML);
     this.renderer.setAttribute('name', component);
+    this.rendererContainer.appendChild(this.renderer);
     this.targetComponent = this.renderer.component;
     this.addCustomForm({properties, attributes});
     this.addInnerHTMLForm(innerHTML);

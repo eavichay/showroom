@@ -81,6 +81,26 @@ async function startServer () {
   });
 
   app.use(async (ctx, next) => {
+    if (ctx.path === '/showroom-config') {
+      const cfgPath = path.resolve(process.cwd(), global.showroom.path, '.showroom', 'config.js');
+      ctx.set('Content-Type', 'application/javascript; charset=utf-8');
+      if (fs.existsSync(cfgPath)) {
+        try {
+          const config = fs.readFileSync(cfgPath);
+          ctx.body = config.toString('utf-8');
+        }
+        catch (err) {
+          ctx.body = 'export default {}';
+        }
+      } else {
+        await next();
+      }
+    } else {
+      await next();
+    }
+  });
+
+  app.use(async (ctx, next) => {
     if (ctx.path === '/showroom-components') {
       ctx.body = componentList;
     } else {
