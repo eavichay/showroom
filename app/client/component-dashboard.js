@@ -53,7 +53,7 @@ export default class ComponentDashboard extends HTMLElement {
           flex-direction: row;
           max-height: 50rem;
           position: relative;
-          transition: 1250ms ease-in-out max-height;
+          transition: 250ms ease-in-out max-height;
         }
 
         #eventLogWrapper {
