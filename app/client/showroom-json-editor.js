@@ -12,6 +12,19 @@ customElements.define('showroom-json-editor', class extends HTMLElement {
           top: 0;
         }
 
+        :host *:focus {
+          outline: auto 5px #913ec5;
+        }
+
+        div.jsoneditor {
+          border: 1px solid #913ec5;
+        }
+
+        div.jsoneditor-menu {
+          background-color: #913ec5;
+          border-bottom: 1px solid #913ec5;
+        }
+
         dialog[open] {
           display: flex;
           position: absolute;
