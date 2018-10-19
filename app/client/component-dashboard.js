@@ -161,6 +161,7 @@ export default class ComponentDashboard extends HTMLElement {
       editor.onchange = () => {
         this.targetComponent.innerHTML = editor.value;
       };
+      this.targetComponent.innerHTML = editor.value;
     }
   }
 
