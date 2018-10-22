@@ -15,6 +15,14 @@
       height: 100%;
       flex-direction: column;
     }
+
+    showroom-app {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+
     .hbox {
       display: flex;
       flex-direction: row;
@@ -29,6 +37,12 @@
       display: inline-flex;
       flex-direction: column;
       flex-grow: 1;
+    }
+
+    showroom-component-list {
+      display: flex;
+      flex-direction: column;
+      flex-grow:L 0;
     }
 
     #component-list {
@@ -75,49 +89,19 @@
   </style>
 </head>
 <body>
-  <component-description></component-description>
-  <h1 id="big-title">Showroom <span id="component-name"></span></h1>
-  <div class="hbox">
-    <div id="component-list">
-      <h3>Component List</h3>
-    </div>
-    <div id="main-view">
-        <component-dashboard></component-dashboard>
-    </div>
-  </div>
+
+  <showroom-app></showroom-app>
 
   <script>
     window.showroomGlobalStyles = [];
   </script>
-  
-  <script type="module" src="./component-dashboard.js"></script>
-  <script type="module" src="./component-renderer.js"></script>
-  <script type="module" src="./component-description.js"></script>
+
+
   <script type="module">
-    const input = document.getElementById('componentPathInput');
-    const dashboard = document.querySelector('component-dashboard');
-    const descriptionView = document.querySelector('component-description');
-    const sections = {general: []};
+    import { createError } from './showroom-app.js';
 
-    const ul = (section) => {
-      let el = document.getElementById('section-' + section);
-      if (!el) {
-        const wrapper = document.createElement('details');
-        const summary = document.createElement('summary');
-        wrapper.setAttribute('open', null);
-        summary.innerText = section;
-        el = document.createElement('ul');
-        el.setAttribute('id', 'section-' + section);
-        wrapper.appendChild(summary);
-        wrapper.appendChild(el);
-        document.querySelector('#component-list').appendChild(wrapper);
-      }
-      return el;
-    };
-
-    let currentModule;
-
-    const loadConfig = async () => {
+    const app = document.querySelector('showroom-app');
+    (async () => {
       const { scripts, styles } = (await import('/showroom-config')).default;
       if (styles) {
         window.showroomGlobalStyles = styles.map(path => {
@@ -133,74 +117,11 @@
           await import(path);
         }
       }
-    };
-
-    const loadComponents = async () => {
-      const components = await (await fetch('/showroom-components')).json();
-      for (let filename of components) {
-        const module = (await import('/.showroom/' + filename)).default;
-        currentModule = module;
-        const { component, path, section, description, descriptionURL }  = module;
-
-        if (path) {
-          await import(path);
-        }
-
-        const li = document.createElement('li');
-        const s = document.createElement('span');
-        s.innerText = component;
-        s.style.marginRight = '0.5rem';
-        li.appendChild(s);
-        const btn = document.createElement('button');
-        btn.classList.add('btn', 'btn-sm');
-        btn.innerText = 'DOCS';
-        if (descriptionURL) {
-          li.appendChild(btn);
-          btn.onclick = () => window.open(descriptionURL, '_blank');
-        } else if (description) {
-          li.appendChild(btn);
-          btn.onclick = () => {
-            descriptionView.setContent(description);
-          }
-        }
-        
-        ul(section || 'general').appendChild(li);
-        s.onclick = () => {
-          dashboard.setupComponent(module);
-          document.querySelector('#component-name').innerText = `(${component})`;
-        }
-      }
-    }
-
-    const createError = (err) => {
-      return `
-# _Oops_, Error.
-
-> The error can be either in the component descriptor file or the component runtime.
-> Perhaps the browser console can provide additional information.
-
----
-
-### Type
-**${err.name}: ${err.message}**
-
-### Stack
-${err.stack}
-
-### Module
-\`\`\`json
-${JSON.stringify(currentModule, null, 2)}
-\`\`\`
-      `
-    }
-
-    Promise.resolve()
-      .then(() => loadConfig())
-      .then(() => loadComponents())
-      .catch(err => {
-        descriptionView.setContent(createError(err));
-        throw err;
-      })
+    })()
+      .then(() => app.loadComponents())
+      .catch(err => setTimeout(() => {
+        app.descriptionView.setContent(err);
+      }, 150));
   </script>
 </body>
 </html>

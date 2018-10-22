@@ -68,6 +68,7 @@ async function startServer () {
     __dirname + '/../../node_modules/jsoneditor/dist',
     __dirname + '/../../node_modules/marked',
     __dirname + '/../../node_modules/milligram/dist',
+    __dirname + '/../../node_modules/slim-js',
     global.showroom.path,
     
   ];

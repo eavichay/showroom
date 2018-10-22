@@ -171,7 +171,7 @@ export default class ComponentDashboard extends HTMLElement {
     if (this.renderer) {
       this.renderer.remove();
     }
-    this.renderer = new ComponentRenderer(outerHTML);
+    this.renderer = new ComponentRenderer(outerHTML, attributes);
     this.renderer.setAttribute('name', component);
     this.rendererContainer.appendChild(this.renderer);
     this.targetComponent = this.renderer.component;

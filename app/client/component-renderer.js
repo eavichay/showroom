@@ -1,7 +1,8 @@
 export default class ComponentRenderer extends HTMLElement {
 
-  constructor (outerHTML = '<showroom-mount-point></showroom-mount-point>') {
+  constructor (outerHTML = '<showroom-mount-point></showroom-mount-point>', attributes = {}) {
     super();
+    this.targetAttributes = attributes;
     this.attachShadow({mode: 'open'});
     this._ = this.shadowRoot;
     this._.innerHTML = /*html*/`
@@ -30,8 +31,20 @@ export default class ComponentRenderer extends HTMLElement {
     if (url) await import(url);
     
     const mountpoint = this._.querySelector('showroom-mount-point') || this._.querySelector('#fallback');
-    mountpoint.outerHTML = `<${name.nodeValue}></${name.nodeValue}>`;
-    this.component = this._.querySelector(name.nodeValue);
+    const range = document.createRange();
+    range.selectNode(mountpoint);
+    range.deleteContents();
+    this.component = document.createElement(name.nodeValue);
+    Object.keys(this.targetAttributes).forEach(attr => {
+      const value = this.targetAttributes[attr];
+      if (typeof value === 'boolean' && value) {
+        this.component.setAttribute(attr, '');
+      } else if (typeof value !== 'boolean') {
+        this.component.setAttribute(attr, this.targetAttributes[attr]);
+      }
+    });
+    // mountpoint.outerHTML = `<${name.nodeValue} ${attributesString}></${name.nodeValue}>`;
+    range.insertNode(this.component);
     window.showroomGlobalStyles.forEach(styleNode => {
       this._.appendChild(styleNode);
     });
