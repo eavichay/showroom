@@ -8,7 +8,7 @@ const find = async (page, path, container) => {
 class TestUtils {
 
   async find (path, container = this.targetComponent) {
-    return await find(this.page, path, container);
+    return await find(this.page, path.trim(), container);
   }
 
   async initialize (page) {
@@ -25,7 +25,7 @@ class TestUtils {
             if (!selector) continue;
       
             if (selector === '//') {
-              container = container.root;
+              container = container.shadowRoot;
             }
             else {
               container = container.querySelector(selector);
