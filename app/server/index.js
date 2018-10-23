@@ -63,12 +63,13 @@ function locateAllNodeModules (root) {
 
 async function startServer () { 
   const allNodeModules = locateAllNodeModules(global.showroom.path);
+  const dir = (module, ...rest) => path.join(path.dirname(require.resolve(module)), ...rest);
   const allowedPaths = [
-    __dirname + '/../client',
-    __dirname + '/../../node_modules/jsoneditor/dist',
-    __dirname + '/../../node_modules/marked',
-    __dirname + '/../../node_modules/milligram/dist',
-    __dirname + '/../../node_modules/slim-js',
+    path.join(__dirname, '/../client'),
+    dir('jsoneditor', 'dist'),
+    dir('marked', '..'),
+    dir('milligram'),
+    dir('slim-js'),
     global.showroom.path,
     
   ];
