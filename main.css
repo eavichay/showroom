@@ -1,0 +1,75 @@
+:root {
+  --accent: #913ec5;
+}
+
+html, body {
+  font-family: "Lora";
+  letter-spacing: 0.02rem;
+}
+
+.brand {
+  font-family: 'Scope One', serif;
+  text-align: center;
+  font-weight: 100;
+  letter-spacing: 3.4rem;
+  font-size: 2.4rem;
+  line-height: 12.5rem;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.hero {
+  align-items: center;
+
+}
+
+.hero.is-info {
+  background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0,0,0,0.3)), url(showroom-bg.jpg) no-repeat center center;
+  background-size: cover;
+}
+
+.hero.is-fullheight {
+  height: 100vh;
+  padding-top: 0.6rem;
+}
+
+nav.navbar {
+  display: flex;
+  justify-content: space-evenly;
+  position: fixed;
+  top: 0;
+  background-color: black !important;
+  border-bottom: 1px solid var(--accent);
+  border-radius: 0rem 0rem 5rem 5rem;
+  width: 90%;
+  align-self: center;
+}
+
+.navbar-item:hover {
+  background-color: var(--accent) !important;
+}
+
+.navbar-item {
+  font-family: "Scope One", sans-serif;
+  font-weight: bold;
+}
+
+.navbar-item > img {
+  margin-right: 1rem;
+}
+
+#screenshot {
+  width: 25rem;
+  position: absolute;
+  bottom: -3rem;
+  align-self: center;
+  box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.5);
+  border: 3px solid var(--accent);
+  background-image: url(screenshot.png);
+  height: 480px;
+  background-size: contain;
+}
