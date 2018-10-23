@@ -27,8 +27,6 @@ customElements.define('demo-component-avengers', class extends HTMLElement {
     this.mission = '';
     this.data = {};
     this.render();
-    this.style.border = '1px solid black';
-    this.style.padding = '1rem';
   }
 
   render () {
@@ -37,6 +35,12 @@ customElements.define('demo-component-avengers', class extends HTMLElement {
     <style>
       ::slotted(span) {
         color: green;
+      }
+      :host {
+        border: 1px solid black;
+        padding: 1rem;
+        position: relative;
+        display: inline-block;
       }
     </style>
     <slot></slot>
@@ -50,8 +54,6 @@ customElements.define('demo-component-avengers', class extends HTMLElement {
       <div>Last Mission: ${this.data ? this.data.lastMission : ''}</div>
     <button>Start Mission</button>
     `;
-    this.style.position = 'relative';
-    this.style.display = 'inline-block';
     _.querySelector('button').addEventListener('click', () => {
       this.dispatchEvent(new CustomEvent('missionstarted', {
         detail: {

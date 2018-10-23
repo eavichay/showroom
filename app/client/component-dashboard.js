@@ -32,10 +32,12 @@ export default class ComponentDashboard extends HTMLElement {
         #renderer-container {
           display: inline-flex;
           flex-grow: 1;
+          padding: 2rem;
+          border-bottom: 3px double lightgrey;
         }
 
         #dashboard {
-          border-right: 1px solid black;
+          border-right: 3px double lightgrey;
           width: fit-content;
           display: inline-flex;
           flex-direction: column;
@@ -48,7 +50,6 @@ export default class ComponentDashboard extends HTMLElement {
         }
 
         #wrapper {
-          border-top: 1px solid black;
           display: inline-flex;
           flex-direction: row;
           max-height: 50rem;
@@ -61,8 +62,7 @@ export default class ComponentDashboard extends HTMLElement {
           display: block;
           flex-grow: 1;
           overflow-y: scroll;
-          top: 0;
-          bottom: 0;
+          padding-top: 2rem;
         }
 
         #eventLog {
@@ -153,7 +153,7 @@ export default class ComponentDashboard extends HTMLElement {
   addInnerHTMLForm (innerHTML) {
     if (innerHTML) {
       const editor = document.createElement('textarea');
-      const label = document.createElement('h3')
+      const label = document.createElement('h6')
       label.innerText = 'Inner HTML';
       this.dashboard.appendChild(label);
       this.dashboard.appendChild(editor);

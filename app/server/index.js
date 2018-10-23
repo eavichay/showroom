@@ -79,7 +79,7 @@ async function startServer () {
 
 
   allowedPaths.forEach(path => {
-    app.use(serve(path, {hidden: true}));
+    app.use(serve(path, {hidden: true, cacheControl: false}));
   });
 
   app.use(async (ctx, next) => {
@@ -93,8 +93,10 @@ async function startServer () {
         }
         catch (err) {
           ctx.body = 'export default {}';
+          await next();
         }
       } else {
+        ctx.body = 'export default {}';
         await next();
       }
     } else {

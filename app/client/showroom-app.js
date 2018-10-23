@@ -1,5 +1,6 @@
 import { Slim } from '/Slim.js';
 
+import './component-description.js';
 import './showroom-component-list.js';
 import './component-dashboard.js';
 
@@ -30,7 +31,7 @@ Slim.tag('showroom-app', class extends Slim {
     <h1 id="big-title">Showroom <span id="component-name"></span></h1>
     <div class="hbox">
       <div id="component-list">
-        <h3>Component List</h3>
+        <h6>Component List</h6>
         <showroom-component-list
           s:repeat="sections as section"
           on-docs="onComponentDocs"

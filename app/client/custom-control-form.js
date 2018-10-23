@@ -6,7 +6,21 @@ export class CustomControlForm extends HTMLElement {
     this.targetComponent = targetComponent;
     this.formData = formData || {};
     this._ = this.attachShadow({mode: 'open'});
-    this._.innerHTML = `<style>@import url("/milligram.css");</style>`
+    this._.innerHTML = /*html*/`
+      <style>@import url("/milligram.css");
+        input[type='email'], input[type='number'], input[type='password'], input[type='search'], input[type='tel'], input[type='text'], input[type='url'], button, textarea, select {
+          width: auto;
+        }
+        label {
+          display: inline;
+        }
+        div.input-control {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+      </style>
+    `;
     this.style.left = '1rem';
     this.style.position = 'relative';
     this.classList.add('container');
@@ -21,12 +35,14 @@ export class CustomControlForm extends HTMLElement {
     const { properties, attributes } = formData;
     if (properties) {
       if (!this.isNested) {
-        const h = document.createElement('h3');
+        const h = document.createElement('h6');
         h.innerText = 'Properties';
         this._.appendChild(h);
       }
       Object.keys(properties).forEach(prop => {
         const type = properties[prop];
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('input-control');
         let input = document.createElement('input');
         switch (true) {
           case typeof type === 'number': 
@@ -67,9 +83,9 @@ export class CustomControlForm extends HTMLElement {
         }
         const label = document.createElement('label');
         label.innerText = prop;
-        this._.appendChild(label);
-        this._.appendChild(input);
-        this._.appendChild(document.createElement('br'));
+        wrapper.appendChild(label);
+        wrapper.appendChild(input);
+        this._.appendChild(wrapper);
         this.targetComponent[prop] = type.value || type;
         input.addEventListener('change', (evt) => {
           this.targetComponent[prop] = input.value;
@@ -77,7 +93,7 @@ export class CustomControlForm extends HTMLElement {
       })
     }
     if (attributes) {
-      const h = document.createElement('h3');
+      const h = document.createElement('h6');
       h.innerText = 'Attributes';
       this._.appendChild(h);
       Object.keys(attributes).forEach((attr) => {
@@ -87,9 +103,11 @@ export class CustomControlForm extends HTMLElement {
         input.value = value;
         const label = document.createElement('label');
         label.innerText = attr;
-        this._.appendChild(label);
-        this._.appendChild(input);
-        this._.appendChild(document.createElement('br'));
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('input-control');
+        wrapper_.appendChild(label);
+        wrapper_.appendChild(input);
+        this._.appendChild(wrapper);
         if (value) {
           targetComponent.setAttribute(attr, value);
         }
