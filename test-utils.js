@@ -16,7 +16,6 @@ class TestUtils {
     await page.evaluate(() => {
       if (!window.queryDeepSelector) {
         window.queryDeepSelector = (selectorStr, container = document) => {
-          debugger;
           const selectorArr = selectorStr.replace(new RegExp('//', 'g'), '%split%//%split%').split('%split%');
       
           for (const index in selectorArr) {
@@ -39,9 +38,14 @@ class TestUtils {
     return page;
   }
 
+  async clearEventList () {
+    const clearEventButton = await find(this.page, 'component-dashboard // input[value="Clear"]');
+    await clearEventButton.click();
+  }
+
   async setTestSubject (componentName) {
     this.testSubjectName = componentName;
-    const span = await this.find(`showroom-component-list li[data-component-name="${componentName}"] > span`);
+    const span = await find(this.page, `showroom-component-list li[data-component-name="${componentName}"] > span`);
     try {
       await span.click();
     }
@@ -53,17 +57,35 @@ class TestUtils {
 
   async testSubject () {
     const handle = await this.page.evaluateHandle(() => {
+      window.dashboard.events = [];
       return window.dashboard.targetComponent;
     });
     return handle;
   }
 
+  async getEventList () {
+    return await (await this.page.evaluate(() => {
+      return window.dashboard.events.map(({type, detail, bubbles}) => {
+        return {
+          type,
+          detail,
+          bubbles
+        };
+      });
+    }));
+  }
+
+  async getLastEvent () {
+    return this.page.evaluate(() => {
+      return window.dashboard.lastEvent;
+    });
+  }
+
   async getProperty (property, target) {
     const resolvedTarget = target || this.targetComponent;
-    return await this.page.evaluate((target, prop) => {
-      debugger;
+    return await (await this.page.evaluate((target, prop) => {
       return target[prop];
-    }, resolvedTarget, property);
+    }, resolvedTarget, property));
   }
 
   async setProperty (property, value, target) {
@@ -84,9 +106,9 @@ class TestUtils {
 
   async getAttribute (name, target) {
     const resolvedTarget = target || this.targetComponent;
-    return await this.page.evaluate((target, name) => {
+    return await(await this.page.evaluate((target, name) => {
       return target.getAttribute(name);
-    }, resolvedTarget, name);
+    }, resolvedTarget, name));
   }
 
   async removeAttribute (name, target) {

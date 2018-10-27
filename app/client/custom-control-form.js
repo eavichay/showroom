@@ -11,13 +11,23 @@ export class CustomControlForm extends HTMLElement {
         input[type='email'], input[type='number'], input[type='password'], input[type='search'], input[type='tel'], input[type='text'], input[type='url'], button, textarea, select {
           width: auto;
         }
+        h6 {
+          font-weight: bold;
+        }
         label {
           display: inline;
+          font-weight: normal;
         }
         div.input-control {
           display: flex;
           flex-direction: row;
           justify-content: space-between;
+        }
+        button {
+          font-size: 1rem;
+          line-height: 1;
+          height: 3.5rem;
+          padding: 0.5rem;
         }
       </style>
     `;
@@ -105,8 +115,8 @@ export class CustomControlForm extends HTMLElement {
         label.innerText = attr;
         const wrapper = document.createElement('div');
         wrapper.classList.add('input-control');
-        wrapper_.appendChild(label);
-        wrapper_.appendChild(input);
+        wrapper.appendChild(label);
+        wrapper.appendChild(input);
         this._.appendChild(wrapper);
         if (value) {
           targetComponent.setAttribute(attr, value);

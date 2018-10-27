@@ -4,7 +4,7 @@ const path = require('path');
 const Koa = require('koa');
 const serve = require('koa-static');
 const yargs = require('yargs');
-const { search, componentList } = require('./build-component-index');
+const { search, getComponents } = require('./build-component-index');
 const chalk = require('chalk');
 const fs = require('fs');
 const { promisify } = require('util');
@@ -41,28 +41,7 @@ async function preflight () {
   }
 }
 
-function locateAllNodeModules (root) {
-  if (root === '/') {
-    return [];
-  }
-  let allNodeModules = [];
-  const content = fs.readdirSync(path.resolve(root));
-  if (content.includes('node_modules')) {
-    allNodeModules.push(path.resolve(root));
-  }
-  try {
-    allNodeModules = allNodeModules.concat(locateAllNodeModules(path.resolve(root, '../')));
-  }
-  catch (err) {
-    console.log(err);
-  }
-  finally {
-    return allNodeModules;
-  }
-}
-
 async function startServer () { 
-  const allNodeModules = locateAllNodeModules(global.showroom.path);
   const dir = (module, ...rest) => path.join(path.dirname(require.resolve(module)), ...rest);
   const allowedPaths = [
     path.join(__dirname, '/../client'),
@@ -106,7 +85,7 @@ async function startServer () {
 
   app.use(async (ctx, next) => {
     if (ctx.path === '/showroom-components') {
-      ctx.body = componentList;
+      ctx.body = getComponents();
     } else {
       await next();
     }

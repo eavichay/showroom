@@ -10,11 +10,15 @@ export default class ComponentRenderer extends HTMLElement {
       :host {
         font-family: initial;
         font-size: initial;
+        width: 100%;
+        height: 100%;
       }
       </style>
       <div id="fallback"></div>
       ${outerHTML}
     `;
+
+    this.fallbackContainer = this._.querySelector('#fallback');
   }
 
   static get observedAttributes () {
@@ -30,7 +34,10 @@ export default class ComponentRenderer extends HTMLElement {
 
     if (url) await import(url);
     
-    const mountpoint = this._.querySelector('showroom-mount-point') || this._.querySelector('#fallback');
+    const mountpoint = this._.querySelector('showroom-mount-point') || this.fallbackContainer;
+    if (mountpoint !== this.fallbackContainer) {
+      this.fallbackContainer.remove();
+    }
     const range = document.createRange();
     range.selectNode(mountpoint);
     range.deleteContents();

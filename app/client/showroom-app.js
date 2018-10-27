@@ -25,6 +25,21 @@ ${JSON.stringify(currentModule, null, 2)}
 
 Slim.tag('showroom-app', class extends Slim {
 
+  constructor () {
+    super();
+    window.addEventListener('hashchange', this.loadComponentByHash.bind(this));
+  }
+
+  loadComponentByHash () {
+    this.sections.forEach(section => {
+      section.forEach((module) => {
+        if (`#${module.component}` === window.location.hash && this.currentModule !== module) {
+          this.onComponentSelected(module);
+        }
+      })
+    });
+  }
+
   get template () {
     return /*html*/`
     <component-description s:id="descriptionView"></component-description>
@@ -46,6 +61,8 @@ Slim.tag('showroom-app', class extends Slim {
   }
 
   onComponentSelected (data) {
+    window.location.hash = data.component;
+    this.currentModule = data;
     this.dashboard.setupComponent(data);
   }
 
@@ -59,8 +76,7 @@ Slim.tag('showroom-app', class extends Slim {
       const components = await (await fetch('/showroom-components')).json();
       for (let filename of components) {
         const module = (await import('/.showroom/' + filename)).default;
-        this.currentModule = module;
-        const { component, path, section, description, descriptionURL }  = module;
+        const { path, section }  = module;
   
         if (path) {
           await import(path);
@@ -76,6 +92,9 @@ Slim.tag('showroom-app', class extends Slim {
       this.sections = Object.keys(sections).map(section => {
         return sections[section];
       });
+
+      this.loadComponentByHash();
+
     } catch (err) {
       this.descriptionView.setContent(createError(err));
     }

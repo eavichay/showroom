@@ -48,7 +48,7 @@ const doSearch = async (path) => {
 };
 
 module.exports = {
-  componentList,
+  getComponents: () => componentList,
   search: async function (root) {
     if (!watcher) {
       const result = await doSearch(root);
