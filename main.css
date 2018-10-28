@@ -56,20 +56,28 @@ nav.navbar {
 .navbar-item {
   font-family: "Scope One", sans-serif;
   font-weight: bold;
+  font-size: 0.8rem;
 }
 
 .navbar-item > img {
   margin-right: 1rem;
+  max-height: 1.25rem;
+  top: -0.1rem;
+  position: relative;
 }
 
 #screenshot {
-  width: 25rem;
+  width: 500px;
   position: absolute;
-  bottom: -3rem;
+  bottom: -7rem;
   align-self: center;
   box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.5);
   border: 3px solid var(--accent);
-  background-image: url(screenshot.png);
-  height: 480px;
+  background-image: url(showroom.gif);
+  height: 625px;
   background-size: contain;
+}
+
+section {
+  border-bottom: 7px solid var(--accent);
 }

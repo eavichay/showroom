@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./milligram.min.css">
+  <script src="./marked.min.js"></script>
+  <script src="./jsoneditor.min.js"></script>
+  <title>ShowRoom</title>
+  <showroom-json-editor></showroom-json-editor>
+  <style>
+    html, body {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+    }
+
+    showroom-app {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hbox {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .vbox {
+      display: flex;
+      flex-direction: column;
+    }
+
+    div {
+      display: inline-flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    showroom-component-list {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 0;
+    }
+
+    #component-list {
+      position: relative;
+      flex-grow: 0;
+      padding: 1rem;
+      border-right: 3px double lightgrey;
+      padding-right: 4rem;
+    }
+
+    showroom-component-list ul {
+      list-style-type: none;
+      margin: 0;
+      padding-left: 0.5rem;
+      position: relative;
+    }
+
+    #component-list details[open] ul {
+      border-left: 1px dotted grey;
+    }
+
+    #main-view {
+      padding: 0;
+      margin: 0;
+    }
+
+    details {
+      cursor: pointer;
+    }
+
+    .btn-sm {
+      font-size: 8px;
+      height: 1.2rem;
+      line-height: 1rem;
+      padding: 0 0.3rem;
+      top: 7px;
+      position: absolute;
+      right: -3.5rem;
+      letter-spacing: 0.05rem;
+      font-weight: 400;
+    }
+
+    #big-title {
+      background-color: #913ec5;
+      color: white;
+      letter-spacing: 0.3rem;
+      padding: 0.5rem;
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    h6 {
+      font-weight: bold;
+    }
+
+  </style>
+</head>
+<body>
+
+  <showroom-app></showroom-app>
+
+  <script>
+    window.showroomGlobalStyles = [];
+  </script>
+
+
+  <script type="module">
+    import { createError } from './showroom-app.js';
+
+    const app = document.querySelector('showroom-app');
+    (async () => {
+      const { scripts, styles } = (await import('./.showroom/config.js')).default;
+      if (styles) {
+        window.showroomGlobalStyles = styles.map(path => {
+          const e = document.createElement('link');
+          e.setAttribute('rel', 'stylesheet');
+          e.href = path;
+          return e;
+        });
+      }
+      
+      if (scripts) {
+        for (let path of scripts) {
+          await import(path);
+        }
+      }
+    })()
+      .then(() => app.loadComponents())
+      .catch(err => setTimeout(() => {
+        app.descriptionView.setContent(err);
+      }, 150));
+  </script>
+</body>
+</html>
