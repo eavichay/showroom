@@ -206,7 +206,7 @@ export default class ComponentDashboard extends HTMLElement {
   }
 
   setupComponent (module) {
-    const { component, properties, attributes, events, innerHTML, outerHTML, centered } = module;
+    const { component, properties, attributes, events, innerHTML, outerHTML, centered, extends : isExtending } = module;
     if (centered) {
       this.setAttribute('center', null);
     } else {
@@ -217,7 +217,7 @@ export default class ComponentDashboard extends HTMLElement {
       this.renderer.remove();
     }
     this.clearEvents();
-    this.renderer = new ComponentRenderer(outerHTML, attributes);
+    this.renderer = new ComponentRenderer(outerHTML, attributes, isExtending);
     this.renderer.setAttribute('name', component);
     this.rendererContainer.appendChild(this.renderer);
     this.targetComponent = this.renderer.component;
