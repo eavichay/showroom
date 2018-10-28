@@ -117,7 +117,7 @@
 
     const app = document.querySelector('showroom-app');
     (async () => {
-      const { scripts, styles } = (await import('./.showroom/config.js')).default;
+      const { scripts, styles } = (await import('./showroom/config.js')).default;
       if (styles) {
         window.showroomGlobalStyles = styles.map(path => {
           const e = document.createElement('link');

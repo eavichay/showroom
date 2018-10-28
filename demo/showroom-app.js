@@ -75,7 +75,7 @@ Slim.tag('showroom-app', class extends Slim {
       const sections = {};
       const components = await (await fetch('./showroom-components.json')).json();
       for (let filename of components) {
-        const module = (await import('./.showroom/' + filename)).default;
+        const module = (await import('./showroom/' + filename)).default;
         const { path, section }  = module;
   
         if (path) {
