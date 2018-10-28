@@ -16,6 +16,9 @@ export default class ComponentRenderer extends HTMLElement {
         font-size: initial;
         width: 100%;
         height: 100%;
+        display: inherit;
+        align-items: inherit;
+        justify-content: inherit;
       }
       </style>
       <div id="fallback"></div>

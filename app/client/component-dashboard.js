@@ -50,6 +50,14 @@ export default class ComponentDashboard extends HTMLElement {
           font-weight: bold;
         }
 
+        textarea, select {
+          background-color: white;
+        }
+
+        textarea {
+          overflow: hidden;
+        }
+
         :host([center]) #renderer-container {
           justify-content: center;
           align-items: center;
@@ -60,6 +68,8 @@ export default class ComponentDashboard extends HTMLElement {
           flex-grow: 1;
           padding: 2rem;
           border-bottom: 3px double lightgrey;
+          background-color: white;
+          overflow: auto;
         }
 
         #dashboard {
@@ -67,9 +77,10 @@ export default class ComponentDashboard extends HTMLElement {
           width: fit-content;
           display: inline-flex;
           flex-direction: column;
-          flex-basis: 45%;
+          flex-basis: 62%;
           overflow-y: scroll;
           padding-top: 2rem;
+          max-width: 75rem;
         }
 
         :host([collapsed]) #wrapper {
@@ -121,6 +132,10 @@ export default class ComponentDashboard extends HTMLElement {
           padding: 0;
           line-height: 1rem;
         }
+
+        custom-control-form {
+          margin-bottom: 3rem;
+        }
       </style>
       <div id="renderer-container">
       </div>
@@ -145,6 +160,7 @@ export default class ComponentDashboard extends HTMLElement {
         this.setAttribute('collapsed', '');
       }
     }
+    this.dashboard.classList.add('container');
   }
 
   get component () {
@@ -190,6 +206,16 @@ export default class ComponentDashboard extends HTMLElement {
     this.eventLog.logged = [];
   }
 
+  autoResizeTextArea (el) {
+    el.onkeydown = () => {
+      el.style.cssText = 'min-height:auto';
+      requestAnimationFrame( () => {
+        el.style.cssText = 'min-height:' + el.scrollHeight + 'px';
+      });
+    };
+    el.onkeydown();
+  }
+
   addInnerHTMLForm (innerHTML) {
     if (innerHTML) {
       const editor = document.createElement('textarea');
@@ -197,18 +223,41 @@ export default class ComponentDashboard extends HTMLElement {
       label.innerText = 'Inner HTML';
       this.dashboard.appendChild(label);
       this.dashboard.appendChild(editor);
-      editor.value = innerHTML;
+      editor.value = innerHTML.trim();
       editor.onchange = () => {
         this.targetComponent.innerHTML = editor.value;
       };
       this.targetComponent.innerHTML = editor.value;
+      this.autoResizeTextArea(editor);
+    }
+  }
+
+  addOuterHTMLForm (outerHTML) {
+    if (outerHTML) {
+      const editor = document.createElement('textarea');
+      const label = document.createElement('h6')
+      label.innerText = 'Wrapping HTML';
+      const innerLabel = document.createElement('span');
+      innerLabel.innerText = '(use the <showroom-mount-point> node to position the custom component)';
+      innerLabel.style.cssText = 'font-size: 1.2rem; font-weight: normal; padding-left: 1rem;';
+      label.appendChild(innerLabel);
+      this.dashboard.appendChild(label);
+      this.dashboard.appendChild(editor);
+      editor.value = outerHTML.trim();
+      editor.onchange = () => {
+        this.setupComponent(Object.assign({}, this.componentModule, {
+          outerHTML: editor.value
+        }));
+      };
+      this.autoResizeTextArea(editor);
     }
   }
 
   setupComponent (module) {
+    this.componentModule = module;
     const { component, properties, attributes, events, innerHTML, outerHTML, centered, extends : isExtending } = module;
     if (centered) {
-      this.setAttribute('center', null);
+      this.setAttribute('center', '');
     } else {
       this.removeAttribute('center');
     }
@@ -223,6 +272,7 @@ export default class ComponentDashboard extends HTMLElement {
     this.targetComponent = this.renderer.component;
     this.addCustomForm({properties, attributes});
     this.addInnerHTMLForm(innerHTML);
+    this.addOuterHTMLForm(outerHTML);
     requestAnimationFrame( () => {
       this.attachEvents(this.targetComponent, events);
     });

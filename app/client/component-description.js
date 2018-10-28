@@ -12,6 +12,11 @@ customElements.define('component-description', class extends HTMLElement {
           overflow: auto;
           top: 15%;
         }
+        #closeButton {
+          position: sticky;
+          top: 2rem;
+          left: 100%;
+        }
       </style>
       <dialog>
       </dialog>
@@ -20,7 +25,12 @@ customElements.define('component-description', class extends HTMLElement {
   }
 
   setContent (markdown) {
-    this.modal.innerHTML = marked(markdown);
+    this.modal.innerHTML = `
+    <button id="closeButton" tabindex="-1" class="btn btn-small">Close</button>
+    ${marked(markdown)}`;
+    this._.querySelector('#closeButton').onclick = () => {
+      this.modal.close();
+    };
     this.modal.showModal();
   }
 

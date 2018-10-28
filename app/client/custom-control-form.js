@@ -10,6 +10,10 @@ export class CustomControlForm extends HTMLElement {
       <style>@import url("/milligram.css");
         input[type='email'], input[type='number'], input[type='password'], input[type='search'], input[type='tel'], input[type='text'], input[type='url'], button, textarea, select {
           width: auto;
+          margin: 0;
+        }
+        input[type], textarea, select {
+          background-color: white;
         }
         h6 {
           font-weight: bold;
@@ -22,6 +26,8 @@ export class CustomControlForm extends HTMLElement {
           display: flex;
           flex-direction: row;
           justify-content: space-between;
+          align-items: center;
+          padding: 0.6rem;
         }
         button {
           font-size: 1rem;
@@ -29,11 +35,11 @@ export class CustomControlForm extends HTMLElement {
           height: 3.5rem;
           padding: 0.5rem;
         }
+        h6:not(:first-child) {
+          margin-top: 3rem;
+        }
       </style>
     `;
-    this.style.left = '1rem';
-    this.style.position = 'relative';
-    this.classList.add('container');
     requestAnimationFrame(this.buildForm.bind(this));
   }
 

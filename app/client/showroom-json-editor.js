@@ -61,7 +61,8 @@ customElements.define('showroom-json-editor', class extends HTMLElement {
       </dialog>
     `;
     this.dialog = this.root.querySelector('dialog');
-    this.editor = new JSONEditor(this.root.querySelector('#editor'), {});
+    JSONEditor.ace = window.ace;
+    this.editor = new JSONEditor(this.root.querySelector('#editor'), {modes: ['tree', 'text']});
     this.btnSubmit = this.root.querySelector('#submit');
     this.btnCancel = this.root.querySelector('#cancel');
     this.btnCancel.onclick = () => this.close();
