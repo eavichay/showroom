@@ -45,14 +45,13 @@ class TestUtils {
 
   async setTestSubject (componentName) {
     this.testSubjectName = componentName;
-    const span = await find(this.page, `showroom-component-list li[data-component-name="${componentName}"] > span`);
-    try {
+    let lastTargetComponent = this.targetComponent;
+    while (lastTargetComponent === this.targetComponent) {
+      const span = await find(this.page, `showroom-component-list li[data-component-name="${componentName}"] > span`);
       await span.click();
+      this.targetComponent = await this.testSubject();
     }
-    catch (err) {}
-    const component = await this.testSubject();
-    this.targetComponent = component;
-    return component;
+    return this.targetComponent;
   }
 
   async testSubject () {

@@ -269,6 +269,9 @@ export default class ComponentDashboard extends HTMLElement {
     this.renderer = new ComponentRenderer(outerHTML, attributes, isExtending);
     this.renderer.setAttribute('name', component);
     this.rendererContainer.appendChild(this.renderer);
+    if (this.targetComponent === this.renderer.component) {
+      throw new Error('Something bad happened');
+    }
     this.targetComponent = this.renderer.component;
     this.addCustomForm({properties, attributes});
     this.addInnerHTMLForm(innerHTML);
