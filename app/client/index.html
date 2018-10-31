@@ -116,7 +116,7 @@
   </script>
 
 
-  <script type="module">
+  <script type="module" crossorigin="anonymous">
     import { createError } from './showroom-app.js';
 
     const app = document.querySelector('showroom-app');
@@ -133,7 +133,10 @@
       
       if (scripts) {
         for (let path of scripts) {
-          await import(path);
+          const script = document.createElement('script');
+          script.src = path;
+          document.head.appendChild(script);
+          // await import(path);
         }
       }
     })()

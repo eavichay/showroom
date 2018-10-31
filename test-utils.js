@@ -119,6 +119,9 @@ class TestUtils {
   }
 }
 
+/**
+ * @returns TestUtils
+ */
 module.exports = async function createUtils(page) {
   if (!page) {
     throw new Error('Page object is mandatory');

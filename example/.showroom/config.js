@@ -1,4 +1,6 @@
 export default {
   styles: [],
-  scripts: []
+  scripts: [
+    'https://unpkg.com/split-me/dist/split-me.js'
+  ]
 }
