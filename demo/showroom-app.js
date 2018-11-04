@@ -66,9 +66,9 @@ Slim.tag('showroom-app', class extends Slim {
   async loadComponents () {
     try {
       const sections = {};
-      const components = await (await fetch('/showroom/demo/showroom-components.json')).json();
+      const components = await (await fetch('https://eavichay.github.io/showroom/demo/showroom-components.json')).json();
       for (let filename of components) {
-        const module = (await import('/showroom/demo/showroom/' + filename)).default;
+        const module = (await import('https://eavichay.github.io/showroom/demo/showroom/' + filename)).default;
         const { path, section }  = module;
   
         if (path) {
