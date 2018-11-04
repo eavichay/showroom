@@ -9,6 +9,6 @@ export default {
   
 ## Library: Vanilla
   
-[source](/demo/timer-component.js)
+[source](/showroom/demo/timer-component.js)
     `
 }

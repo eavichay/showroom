@@ -16,6 +16,6 @@ export default {
 # Demo-User-Card
 ## Library: Lit-Element
 
-[Source](/demo/demo-user-card.js)
+[Source](/showroom/demo/demo-user-card.js)
   `
 }

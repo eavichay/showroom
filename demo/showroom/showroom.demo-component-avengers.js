@@ -5,7 +5,7 @@ export default {
 # Demo Component
 ## Library: slim.js
 
-[Source](/demo/demo-component-avengers.js)
+[Source](/showroom/demo/demo-component-avengers.js)
 
 ### Usage
 \`\`\`html

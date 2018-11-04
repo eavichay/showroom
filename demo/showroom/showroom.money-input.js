@@ -22,6 +22,6 @@ export default {
 
 This is a class extending HTMLInputElement, showroom supports [customized built-in elements](https://developers.google.com/web/fundamentals/web-components/customelements).
 
-[Source](/demo/money-input.js)
+[Source](/showroom/demo/money-input.js)
   `
 }
