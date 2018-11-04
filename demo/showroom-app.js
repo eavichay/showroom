@@ -1,4 +1,4 @@
-import { Slim } from './Slim.js';
+import { Slim } from '/demo/Slim.js';
 
 import './component-description.js';
 import './showroom-component-list.js';
@@ -6,18 +6,13 @@ import './component-dashboard.js';
 
 export const createError = err => `
 # _Oops_, Error.
-
 > The error can be either in the component descriptor file or the component runtime.
 > Perhaps the browser console can provide additional information.
-
 ---
-
 ### Type
 **${err.name}: ${err.message}**
-
 ### Stack
 ${err.stack}
-
 ### Module
 \`\`\`json
 ${JSON.stringify(currentModule, null, 2)}
@@ -73,9 +68,9 @@ Slim.tag('showroom-app', class extends Slim {
   async loadComponents () {
     try {
       const sections = {};
-      const components = await (await fetch('./showroom-components.json')).json();
+      const components = await (await fetch('/demo/showroom-components.json')).json();
       for (let filename of components) {
-        const module = (await import('./showroom/' + filename)).default;
+        const module = (await import('/demo/showroom/' + filename)).default;
         const { path, section }  = module;
   
         if (path) {

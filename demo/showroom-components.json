@@ -1,1 +1,6 @@
-["showroom.demo-component-avengers.js","showroom.demo-user-card.js","showroom.time-component.js"]
+[
+  "showroom.demo-component-avengers.js",
+  "showroom.demo-user-card.js",
+  "showroom.stencil.js",
+  "showroom.money-input.js",
+  "showroom.time-component.js"]

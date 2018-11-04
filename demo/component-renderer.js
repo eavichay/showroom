@@ -1,7 +1,11 @@
 export default class ComponentRenderer extends HTMLElement {
 
-  constructor (outerHTML = '<showroom-mount-point></showroom-mount-point>', attributes = {}) {
+  constructor (
+      outerHTML = '<showroom-mount-point></showroom-mount-point>',
+      attributes = {},
+      isExtending) {
     super();
+    this.extending = isExtending;
     this.targetAttributes = attributes;
     this.attachShadow({mode: 'open'});
     this._ = this.shadowRoot;
@@ -12,6 +16,9 @@ export default class ComponentRenderer extends HTMLElement {
         font-size: initial;
         width: 100%;
         height: 100%;
+        display: inherit;
+        align-items: inherit;
+        justify-content: inherit;
       }
       </style>
       <div id="fallback"></div>
@@ -29,6 +36,19 @@ export default class ComponentRenderer extends HTMLElement {
     this.render();
   }
 
+  createElement (name, extending) {
+    let result;
+    if (extending) {
+      result = document.createElement(extending, {
+        is: name
+      });
+      result.setAttribute('is', name);
+    } else {
+      result = document.createElement(name);
+    }
+    return result;
+  }
+
   async render () {
     const {url, name } = this.attributes;
 
@@ -41,7 +61,7 @@ export default class ComponentRenderer extends HTMLElement {
     const range = document.createRange();
     range.selectNode(mountpoint);
     range.deleteContents();
-    this.component = document.createElement(name.nodeValue);
+    this.component = this.createElement(name.nodeValue, this.extending);
     Object.keys(this.targetAttributes).forEach(attr => {
       const value = this.targetAttributes[attr];
       if (typeof value === 'boolean' && value) {

@@ -37,7 +37,7 @@ export default class ComponentDashboard extends HTMLElement {
   render () {
     this._.innerHTML = /*html*/`
       <style>
-        @import url("./milligram.min.css");
+        @import url("/demo/milligram.min.css");
         :host {
           display: flex;
           flex-direction: column;
@@ -45,37 +45,40 @@ export default class ComponentDashboard extends HTMLElement {
           justify-content: space-between;
           position: relative;
         }
-
         h6 {
           font-weight: bold;
         }
-
+        textarea, select {
+          background-color: white;
+        }
+        textarea {
+          overflow: hidden;
+        }
         :host([center]) #renderer-container {
           justify-content: center;
           align-items: center;
         }
-
         #renderer-container {
           display: inline-flex;
           flex-grow: 1;
           padding: 2rem;
           border-bottom: 3px double lightgrey;
+          background-color: white;
+          overflow: auto;
         }
-
         #dashboard {
           border-right: 3px double lightgrey;
           width: fit-content;
           display: inline-flex;
           flex-direction: column;
-          flex-basis: 45%;
+          flex-basis: 62%;
           overflow-y: scroll;
           padding-top: 2rem;
+          max-width: 75rem;
         }
-
         :host([collapsed]) #wrapper {
           height: 0rem;
         }
-
         #wrapper {
           display: inline-flex;
           flex-direction: row;
@@ -83,7 +86,6 @@ export default class ComponentDashboard extends HTMLElement {
           transition: 250ms ease-in-out height;
           height: 35rem;
         }
-
         #eventLogWrapper {
           position: relative;
           display: block;
@@ -91,24 +93,20 @@ export default class ComponentDashboard extends HTMLElement {
           overflow-y: scroll;
           padding-top: 2rem;
         }
-
         #eventLog {
           display: inline-flex;
           flex-direction: column-reverse;
           overflow: visible;
         }
-
         #eventLogWrapper input[type="button"] {
           position: absolute;
           right: 0.5rem;
           top: 0.5rem;
         }
-
         :host([collapsed]) #toggle {
           top: -2.5rem;
           height: 3rem;
         }
-
         #toggle {
           transition: 250ms ease-in-out all;
           font-size: 1.2rem;
@@ -120,6 +118,9 @@ export default class ComponentDashboard extends HTMLElement {
           top: -1rem;
           padding: 0;
           line-height: 1rem;
+        }
+        custom-control-form {
+          margin-bottom: 3rem;
         }
       </style>
       <div id="renderer-container">
@@ -145,6 +146,7 @@ export default class ComponentDashboard extends HTMLElement {
         this.setAttribute('collapsed', '');
       }
     }
+    this.dashboard.classList.add('container');
   }
 
   get component () {
@@ -190,6 +192,16 @@ export default class ComponentDashboard extends HTMLElement {
     this.eventLog.logged = [];
   }
 
+  autoResizeTextArea (el) {
+    el.onkeydown = () => {
+      el.style.cssText = 'min-height:auto';
+      requestAnimationFrame( () => {
+        el.style.cssText = 'min-height:' + el.scrollHeight + 'px';
+      });
+    };
+    el.onkeydown();
+  }
+
   addInnerHTMLForm (innerHTML) {
     if (innerHTML) {
       const editor = document.createElement('textarea');
@@ -197,18 +209,41 @@ export default class ComponentDashboard extends HTMLElement {
       label.innerText = 'Inner HTML';
       this.dashboard.appendChild(label);
       this.dashboard.appendChild(editor);
-      editor.value = innerHTML;
+      editor.value = innerHTML.trim();
       editor.onchange = () => {
         this.targetComponent.innerHTML = editor.value;
       };
       this.targetComponent.innerHTML = editor.value;
+      this.autoResizeTextArea(editor);
+    }
+  }
+
+  addOuterHTMLForm (outerHTML) {
+    if (outerHTML) {
+      const editor = document.createElement('textarea');
+      const label = document.createElement('h6')
+      label.innerText = 'Wrapping HTML';
+      const innerLabel = document.createElement('span');
+      innerLabel.innerText = '(use the <showroom-mount-point> node to position the custom component)';
+      innerLabel.style.cssText = 'font-size: 1.2rem; font-weight: normal; padding-left: 1rem;';
+      label.appendChild(innerLabel);
+      this.dashboard.appendChild(label);
+      this.dashboard.appendChild(editor);
+      editor.value = outerHTML.trim();
+      editor.onchange = () => {
+        this.setupComponent(Object.assign({}, this.componentModule, {
+          outerHTML: editor.value
+        }));
+      };
+      this.autoResizeTextArea(editor);
     }
   }
 
   setupComponent (module) {
-    const { component, properties, attributes, events, innerHTML, outerHTML, centered } = module;
+    this.componentModule = module;
+    const { component, properties, attributes, events, innerHTML, outerHTML, centered, extends : isExtending } = module;
     if (centered) {
-      this.setAttribute('center', null);
+      this.setAttribute('center', '');
     } else {
       this.removeAttribute('center');
     }
@@ -217,12 +252,16 @@ export default class ComponentDashboard extends HTMLElement {
       this.renderer.remove();
     }
     this.clearEvents();
-    this.renderer = new ComponentRenderer(outerHTML, attributes);
+    this.renderer = new ComponentRenderer(outerHTML, attributes, isExtending);
     this.renderer.setAttribute('name', component);
     this.rendererContainer.appendChild(this.renderer);
+    if (this.targetComponent === this.renderer.component) {
+      throw new Error('Something bad happened');
+    }
     this.targetComponent = this.renderer.component;
     this.addCustomForm({properties, attributes});
     this.addInnerHTMLForm(innerHTML);
+    this.addOuterHTMLForm(outerHTML);
     requestAnimationFrame( () => {
       this.attachEvents(this.targetComponent, events);
     });
