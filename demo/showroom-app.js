@@ -72,7 +72,7 @@ Slim.tag('showroom-app', class extends Slim {
         const { path, section }  = module;
   
         if (path) {
-          await import(path);
+          await import('https://eavichay.github.io/showroom/' + path);
         }
   
         const targetSection = section || 'general';
