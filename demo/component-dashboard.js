@@ -37,7 +37,7 @@ export default class ComponentDashboard extends HTMLElement {
   render () {
     this._.innerHTML = /*html*/`
       <style>
-        @import url("https://eavichay.github.io/showroom/demo/milligram.min.css");
+        @import url("/showroom/demo/milligram.min.css");
         :host {
           display: flex;
           flex-direction: column;

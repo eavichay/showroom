@@ -1,4 +1,4 @@
-import { LitElement, html} from 'https://unpkg.com/@polymer/lit-element@0.6.2/lit-element.js?module';
+import { LitElement, html} from 'https://unpkg.com/@polymer/lit-element/lit-element.js?module';
 
 
 

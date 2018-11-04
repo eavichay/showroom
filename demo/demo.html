@@ -5,11 +5,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script>
+    customElements._define = customElements.define;
+    customElements.define = (tag, clazz, options) => {
+      if (!customElements.get(tag)) {
+        customElements._define(tag, clazz, options);
+      }
+    }
+  </script>
   <script src="https://unpkg.com/slim-js@4.0.5/Slim.nomodule.js"></script>
   <script src="https://unpkg.com/slim-js@4.0.5/directives/repeat.nomodule.js"></script>
-  <link rel="stylesheet" href="https://eavichay.github.io/showroom/demo/milligram.min.css">
-  <script src="https://eavichay.github.io/showroom/demo/marked.min.js"></script>
-  <script src="https://eavichay.github.io/showroom/demo/jsoneditor.min.js"></script>
+  <link rel="stylesheet" href="/showroom/demo/milligram.min.css">
+  <script src="/showroom/demo/marked.min.js"></script>
+  <script src="/showroom/demo/jsoneditor.min.js"></script>
   <title>ShowRoom</title>
   <showroom-json-editor></showroom-json-editor>
   <style>
