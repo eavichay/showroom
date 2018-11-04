@@ -1,5 +1,3 @@
-import { Slim } from './Slim.js';
-import './repeat.js';
 
 Slim.tag('showroom-component-list',
 /*html*/`

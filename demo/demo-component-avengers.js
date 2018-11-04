@@ -1,6 +1,3 @@
-import { Slim } from './Slim.js';
-import './repeat.js';
-
 const template = /*html*/`
 <style>
   @import url("https://unpkg.com/bootstrap@4.1.3/dist/css/bootstrap.min.css");
