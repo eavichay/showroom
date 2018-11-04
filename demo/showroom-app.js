@@ -1,4 +1,4 @@
-import { Slim } from '/demo/Slim.js';
+import { Slim } from './Slim.js';
 
 import './component-description.js';
 import './showroom-component-list.js';
