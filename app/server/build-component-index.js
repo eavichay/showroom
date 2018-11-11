@@ -3,6 +3,7 @@ const { promisify } = require('util');
 const readdir = promisify(fs.readdir);
 const chalk = require('chalk');
 const lstat = promisify(fs.lstat);
+const path = require('path');
 
 let componentList = [];
 
@@ -29,14 +30,15 @@ const info = (...args) => {
 
 let watcher;
 
-const doSearch = async (path) => {
-  info('Searching in', path);
-  const files = await readdir(path);
+const doSearch = async (rootPath) => {
+  info('Searching in', rootPath);
+  const files = await readdir(rootPath);
   await Promise.all(files.map(async filename => {
-    const stats = await lstat(path + '/' + filename);
+    const filePath = path.join(rootPath, filename);
+    const stats = await lstat(filePath);
     if (stats.isDirectory()) {
       if (filename !== 'node_modules') {
-        await search(path + '/' + filename)
+        await search(filePath)
       } 
     } else if (stats.isFile() && filename !== 'config.js') {
       info(`\t${filename}`);
