@@ -2,6 +2,7 @@
 
 const path = require('path');
 const Koa = require('koa');
+const mount = require('koa-mount');
 const serve = require('koa-static');
 const yargs = require('yargs');
 const { search, getComponents } = require('./build-component-index');
@@ -11,7 +12,14 @@ const { promisify } = require('util');
 
 const lstat = promisify(fs.lstat);
 
+const backend = new Koa();
+const frontend = new Koa();
 const app = new Koa();
+
+const serveStaticOptions = {
+  hidden: true,
+  cacheControl: false
+};
 
 yargs
   .usage('$0 [--path] [--port]', '', (yargs) => {}, (argv) => {
@@ -50,7 +58,6 @@ async function startServer () {
     dir('milligram'),
     dir('slim-js'),
     global.showroom.path,
-    
   ];
 
   console.log('Expecting Showroom files to be at', global.showroom.path + '/.showroom')
@@ -58,11 +65,11 @@ async function startServer () {
 
 
   allowedPaths.forEach(path => {
-    app.use(serve(path, {hidden: true, cacheControl: false}));
+    frontend.use(serve(path, serveStaticOptions));
   });
 
-  app.use(async (ctx, next) => {
-    if (ctx.path === '/showroom-config') {
+  backend.use(async (ctx, next) => {
+    if (ctx.path === '/.showroom-app/showroom-config') {
       const cfgPath = path.resolve(process.cwd(), global.showroom.path, '.showroom', 'config.js');
       ctx.set('Content-Type', 'application/javascript; charset=utf-8');
       if (fs.existsSync(cfgPath)) {
@@ -83,13 +90,29 @@ async function startServer () {
     }
   });
 
-  app.use(async (ctx, next) => {
-    if (ctx.path === '/showroom-components') {
+  backend.use(async (ctx, next) => {
+    if (ctx.path === '/index.html' || ctx.path === '/') {
+      ctx.redirect('/.showroom-app/index.html');
+    } else {
+      next();
+    }
+  });
+
+  backend.use(async (ctx, next) => {
+    if (ctx.path === '/.showroom-app/showroom-components') {
       ctx.body = getComponents();
     } else {
       await next();
     }
   });
+
+  // attempt serving static files by path priority
+  app.use(mount('/.showroom-app', frontend));
+  app.use(mount('/', frontend));
+
+  // attempt serving backend files
+  app.use(mount('/', backend));
+  
   return true;
 }
 

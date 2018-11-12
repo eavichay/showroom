@@ -1,4 +1,4 @@
-import { Slim } from '/Slim.js';
+import { Slim } from '/.showroom-app/Slim.js';
 
 import './component-description.js';
 import './showroom-component-list.js';
@@ -73,7 +73,7 @@ Slim.tag('showroom-app', class extends Slim {
   async loadComponents () {
     try {
       const sections = {};
-      const components = await (await fetch('/showroom-components')).json();
+      const components = await (await fetch('/.showroom-app/showroom-components')).json();
       for (let filename of components) {
         const module = (await import('/.showroom/' + filename)).default;
         const { path, section }  = module;

@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="/milligram.min.css">
-  <script src="/marked.min.js"></script>
-  <script src="/jsoneditor.min.js"></script>
+  <link rel="stylesheet" href="/.showroom-app/milligram.min.css">
+  <script src="/.showroom-app/marked.min.js"></script>
+  <script src="/.showroom-app/jsoneditor.min.js"></script>
   <title>ShowRoom</title>
   <showroom-json-editor></showroom-json-editor>
   <style>
@@ -121,7 +121,7 @@
 
     const app = document.querySelector('showroom-app');
     (async () => {
-      const { scripts, styles } = (await import('/showroom-config')).default;
+      const { scripts, styles } = (await import('/.showroom-app/showroom-config')).default;
       if (styles) {
         window.showroomGlobalStyles = styles.map(path => {
           const e = document.createElement('link');

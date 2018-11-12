@@ -1,5 +1,5 @@
-import { Slim } from '/Slim.js';
-import '/directives/repeat.js';
+import { Slim } from '/.showroom-app/Slim.js';
+import '/.showroom-app/directives/repeat.js';
 
 const template = /*html*/`
 <style>

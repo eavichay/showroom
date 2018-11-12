@@ -7,7 +7,7 @@ export class CustomControlForm extends HTMLElement {
     this.formData = formData || {};
     this._ = this.attachShadow({mode: 'open'});
     this._.innerHTML = /*html*/`
-      <style>@import url("/milligram.css");
+      <style>@import url("/.showroom-app/milligram.css");
         input[type='email'], input[type='number'], input[type='password'], input[type='search'], input[type='tel'], input[type='text'], input[type='url'], button, textarea, select {
           width: auto;
           margin: 0;
