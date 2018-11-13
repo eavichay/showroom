@@ -24,11 +24,16 @@ function debounce(func, wait, immediate) {
 
 const info = (...args) => {
   if (global.showroom.verbose) {
-    console.log(...args);
+    log(...args);
   }
 }
 
 let watcher;
+const log = (...args) => {
+  if (!global.showroom.silent) {
+    console.log(...args);
+  }
+}
 
 const doSearch = async (rootPath) => {
   info('Searching in', rootPath);
@@ -45,7 +50,7 @@ const doSearch = async (rootPath) => {
       componentList.push(filename);
     }
   }));
-  console.log(chalk.yellow(`${componentList.length} Total file(s) found in .showroom folder`));
+  log(chalk.yellow(`${componentList.length} Total file(s) found in .showroom folder`));
   return componentList;
 };
 
@@ -54,11 +59,13 @@ module.exports = {
   search: async function (root) {
     if (!watcher) {
       const result = await doSearch(root);
-      watcher = fs.watch(root, {}, debounce((e, f) => {
+      if (!global.noWatch) {
+        watcher = fs.watch(root, {}, debounce((e, f) => {
         componentList = [];
-        console.log(chalk.yellow(`Filesystem change detected... scanning .showroom folder`));
-        doSearch(root);
-      }, 150));
+        if (!global.showroom.silent) log(chalk.yellow(`Filesystem change detected... scanning .showroom folder`));
+        doSearch(root, silent);
+        }, 150));
+      }
       return result;
     } else {
       return componentList;

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./app/server/index.js --path ./example --port 3000",
     "dev": "nodemon ./app/server/index.js --path ./example --port 3000",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -R progress --timeout 15000"
   },
   "repository": "https://github.com/eavichay/showroom",
   "bin": {

@@ -15,36 +15,58 @@ const lstat = promisify(fs.lstat);
 const backend = new Koa();
 const frontend = new Koa();
 const app = new Koa();
+let koaServer;
 
 const serveStaticOptions = {
   hidden: true,
   cacheControl: false
 };
 
-yargs
+let { log } = console;
+
+if (require.main === module) {
+  yargs
   .usage('$0 [--path] [--port]', '', (yargs) => {}, (argv) => {
         global.showroom = {
           verbose: argv.verbose,
+          silent: false,
           port: argv.port,
           path: argv.path
         };
-        preflight()
-          .then(() => console.log(chalk.green('Starting server')))
-          .then(() => startServer())
-          .then(() => app.listen(argv.port));
+        bootstrap({
+          port: argv.port,
+          path: argv.path
+        });
     })
   .default('port', '3000')
   .default('path', './')
   .help()
   .argv;
+}
+
+async function bootstrap ({port = 3000, path = './', silent = false}) {
+  global.showroom = Object.assign(global.showroom || {},
+    {
+      path,
+      port,
+      silent
+    });
+  if (silent) {
+    log = () => {};
+  }
+  await preflight();
+  log(chalk.green('Starting server'));
+  await startServer();
+  koaServer = app.listen(port);
+}
 
 async function preflight () {
   const parentDir = path.resolve(process.cwd(), global.showroom.path);
   const dir = path.resolve(process.cwd(), global.showroom.path, '.showroom');
   if (fs.existsSync(dir) && (await lstat(dir)).isDirectory()) {
-    console.log(`.showroom folder located`);
+    log(`.showroom folder located`);
   } else {
-    console.log(chalk.red(`Could not locate .showroom folder in ${parentDir}`));
+    log(chalk.red(`Could not locate .showroom folder in ${parentDir}`));
     process.exit(-1);
   }
 }
@@ -60,7 +82,7 @@ async function startServer () {
     global.showroom.path,
   ];
 
-  console.log('Expecting Showroom files to be at', global.showroom.path + '/.showroom')
+  log('Expecting Showroom files to be at', global.showroom.path + '/.showroom')
   await search(path.resolve(process.cwd(), global.showroom.path, '.showroom'));
 
 
@@ -116,4 +138,7 @@ async function startServer () {
   return true;
 }
 
-
+module.exports = {
+  bootstrap,
+  server: () => koaServer
+};

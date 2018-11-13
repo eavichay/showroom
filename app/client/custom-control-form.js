@@ -60,6 +60,7 @@ export class CustomControlForm extends HTMLElement {
         const wrapper = document.createElement('div');
         wrapper.classList.add('input-control');
         let input = document.createElement('input');
+        input.setAttribute('data-target-property', prop);
         switch (true) {
           case typeof type === 'number': 
             input.setAttribute('type', 'number');
@@ -116,6 +117,7 @@ export class CustomControlForm extends HTMLElement {
         const value = attributes[attr];
         const input = document.createElement('input');
         input.type = 'text';
+        input.setAttribute('data-target-attribute', attr);
         input.value = value;
         const label = document.createElement('label');
         label.innerText = attr;
