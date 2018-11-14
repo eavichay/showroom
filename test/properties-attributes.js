@@ -8,6 +8,7 @@ describe('showroom::setProperty', () => {
   beforeEach(async () => {
     await showroom.setTestSubject(component);
     root = await page.$('showroom-app');
+    await page.waitFor(300);
   });
 
   it('Should set property via UI', async () => {

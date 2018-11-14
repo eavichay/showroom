@@ -1,7 +1,7 @@
 const path = require('path');
 const showroomServer = require('../app/server');
 const puppeteer = require('puppeteer');
-const showroomApp = require('../test-utils');
+const showroomFactory = require('../puppeteer/index.js');
 
 global.opts = {
   baseUrl: 'http://127.0.0.1:3001',
@@ -12,35 +12,20 @@ global.puppeteer = puppeteer;
 global.noWatch = true;
 
 before(async () => {
-  showroomServer.bootstrap({
+  const showroom = showroomFactory({
     port: 3001,
+    silent: true,
     path: path.join(__dirname, '../example'),
-    silent: true
+    headless: global.opts.headless
   });
-  global.browser = await global.puppeteer.launch(global.opts);
-  const page = await browser.newPage();
-  global.page = page;
-  let status = 0;
-  let retries = 10;
-  while (!status) {
-    if (retries < 0) {
-      throw new Error('Error connecting to showroom server');
-    }
-    try {
-      await page.goto(global.opts.baseUrl, {
-        waitUntil: 'networkidle0'
-      });
-      status = 'OK';
-    }
-    catch (err) {
-      await page.waitFor(150);
-      retries--;
-    }
-  }
-  global.showroom = await showroomApp(page);
+  await showroom.start();
+  
+  global.browser = showroom.browser;
+  global.page = showroom.page;
+  global.showroom = showroom.utils;
+  global.showroomInstance = showroom;
 })
 
 after(async () => {
-  await global.browser.close();
-  await showroomServer.server().close();
+  await showroomInstance.stop();
 })
