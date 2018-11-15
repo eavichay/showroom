@@ -17,12 +17,11 @@ class TestUtils {
       if (!window.queryDeepSelector) {
         window.queryDeepSelector = (selectorStr, container = document) => {
           const selectorArr = selectorStr.replace(new RegExp('//', 'g'), '%split%//%split%').split('%split%');
-          // debugger;
           for (const index in selectorArr) {
             const selector = selectorArr[index].trim();
-      
+
             if (!selector) continue;
-      
+
             if (selector === '//') {
               container = container.shadowRoot;
             }
@@ -108,6 +107,13 @@ class TestUtils {
     return await(await this.page.evaluate((target, name) => {
       return target.getAttribute(name);
     }, resolvedTarget, name));
+  }
+
+  async hasAttribute (name, target) {
+      const resolvedTarget = target || this.targetComponent;
+      return await(await this.page.evaluate((target, name) => {
+          return target.hasAttribute(name);
+      }, resolvedTarget, name));
   }
 
   async removeAttribute (name, target) {

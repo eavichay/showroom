@@ -43,8 +43,8 @@ const doSearch = async (rootPath) => {
     const stats = await lstat(filePath);
     if (stats.isDirectory()) {
       if (filename !== 'node_modules') {
-        await search(filePath)
-      } 
+        await doSearch(filePath);
+      }
     } else if (stats.isFile() && filename !== 'config.js') {
       info(`\t${filename}`);
       componentList.push(filename);
