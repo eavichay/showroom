@@ -56,7 +56,7 @@ const doSearch = async (rootPath) => {
 
 module.exports = {
   getComponents: () => componentList,
-  search: async function (root) {
+  search: async function (root, silent = false) {
     if (!watcher) {
       const result = await doSearch(root);
       if (!global.noWatch) {
