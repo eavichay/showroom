@@ -21,6 +21,12 @@ export default class ComponentDashboard extends HTMLElement {
     window.dashboard = this;
   }
 
+  trigger (fnName) {
+    if (fnName && this.customControlForm) {
+      this.customControlForm.triggers[fnName]();
+    }
+  }
+
   get lastEvent () {
     return this.events[this.events.length - 1];
   }
@@ -170,7 +176,8 @@ export default class ComponentDashboard extends HTMLElement {
   addCustomForm (formData) {
     this.dashboard.innerHTML = null;
     const targetComponent = this.renderer.component;
-    this.dashboard.appendChild(new CustomControlForm(targetComponent, formData));
+    this.customControlForm = new CustomControlForm(targetComponent, formData)
+    this.dashboard.appendChild(this.customControlForm);
   }
 
   attachEvents (target, eventList) {

@@ -123,6 +123,12 @@ class TestUtils {
     }, resolvedTarget, name);
     return resolvedTarget;
   }
+
+  async trigger (fnName) {
+    await this.page.evaluate((fnName) => {
+      dashboard.trigger(fnName);
+    }, fnName);
+  }
 }
 
 /**
