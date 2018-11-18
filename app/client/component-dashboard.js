@@ -255,7 +255,7 @@ export default class ComponentDashboard extends HTMLElement {
 
   setupComponent (module) {
     this.componentModule = module;
-    const { component, properties, attributes, events, innerHTML, outerHTML, centered, extends : isExtending } = module;
+    const { functions, component, properties, attributes, events, innerHTML, outerHTML, centered, extends : isExtending } = module;
     if (centered) {
       this.setAttribute('center', '');
     } else {
@@ -273,7 +273,7 @@ export default class ComponentDashboard extends HTMLElement {
       throw new Error('Something bad happened');
     }
     this.targetComponent = this.renderer.component;
-    this.addCustomForm({properties, attributes});
+    this.addCustomForm({properties, attributes, functions});
     this.addInnerHTMLForm(innerHTML);
     this.addOuterHTMLForm(outerHTML);
     requestAnimationFrame( () => {
