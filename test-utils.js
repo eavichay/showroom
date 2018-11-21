@@ -124,6 +124,25 @@ class TestUtils {
     return resolvedTarget;
   }
 
+  async isVisible (target) {
+      const resolvedTarget = target || this.targetComponent;
+    
+      const isIntersectingViewport = await resolvedTarget.isIntersectingViewport();
+      const isNotHidden = await this.page.evaluate(async (target) => {
+          const style = getComputedStyle(target);
+          return style && style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+      }, resolvedTarget);
+      return isIntersectingViewport && isNotHidden;
+  }
+
+  async getTextContent(target) {
+      const resolvedTarget = target || this.targetComponent;
+      await this.page.evaluate(async (target) => target, resolvedTarget);
+
+      const textContent = await resolvedTarget.getProperty('textContent');
+      return textContent.jsonValue();
+  }
+
   async trigger (fnName) {
     await this.page.evaluate((fnName) => {
       dashboard.trigger(fnName);
