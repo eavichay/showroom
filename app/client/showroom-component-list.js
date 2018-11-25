@@ -6,7 +6,7 @@ Slim.tag('showroom-component-list',
 <details open>
   <summary>{{section.name}}</summary>
   <ul>
-    <li s:repeat="section as item" bind:data-component-name="item.component">
+    <li s:repeat="section as item" bind:data-component-name="item.component" style="line-height: 2.7rem; margin-top: 1.0rem; position: relative">
       <span click="onComponentClick">{{item.component}}</span>
       <button class="btn btn-sm" bind:style="getButtonStyle(item)" click="onDocsClick">DOCS</button>
     </li>

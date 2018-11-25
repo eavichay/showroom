@@ -13,16 +13,16 @@ customElements.define('showroom-json-editor', class extends HTMLElement {
         }
 
         :host *:focus {
-          outline: auto 5px #913ec5;
+          outline: auto 5px #3e86c5;
         }
 
         div.jsoneditor {
-          border: 1px solid #913ec5;
+          border: 1px solid #3e86c5;
         }
 
         div.jsoneditor-menu {
-          background-color: #913ec5;
-          border-bottom: 1px solid #913ec5;
+          background-color: #3e86c5;
+          border-bottom: 1px solid #3e86c5;
         }
 
         dialog[open] {

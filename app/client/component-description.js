@@ -16,6 +16,8 @@ customElements.define('component-description', class extends HTMLElement {
           position: sticky;
           top: 2rem;
           left: 100%;
+          background: #3e86c5;
+          border: none;
         }
       </style>
       <dialog>

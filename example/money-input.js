@@ -26,6 +26,22 @@ class MoneyInput extends HTMLInputElement {
     }
   }
 
+  set disabled (v) {
+    if (v) {
+      this.setAttribute('disabled', 'disabled');
+    } else {
+      this.removeAttribute('disabled');
+    }
+  }
+
+  get disabled () {
+    return this.hasAttribute('disabled');
+  }
+
+  clear () {
+    this.value = this.currency + ' ' + 0;
+  }
+
   update () {
     this.value = this.currency + ' ' + this.value.replace(/\D/g,'');
   }

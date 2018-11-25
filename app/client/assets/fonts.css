@@ -1,0 +1,34 @@
+@font-face {
+  font-family: 'Fira Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Fira Mono Regular'), local('FiraMono-Regular'), url('./FiraMono-Regular.ttf') format('woff2');
+}
+
+@font-face {
+  font-family: 'Fira Mono';
+  font-style: bold;
+  font-weight: 700;
+  src: local('Fira Mono Bold'), local('FiraMono-Bold'), url('./FiraMono-Bold.ttf') format('woff2');
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Source Code Pro'), local('SourceCodePro-Regular'), url('./SourceCodePro-Regular.ttf') format('woff2');
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: bold;
+  font-weight: 700;
+  src: local('Fira Mono Bold'), local('SourceCodePro-Bold'), url('./SourceCodePro-Bold.ttf') format('woff2');
+}
+
+@font-face {
+  font-family: 'Forum';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Forum Regular'), local('Forum-Regular'), url('./Forum-Regular.ttf') format('woff2');
+}
