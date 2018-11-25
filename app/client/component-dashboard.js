@@ -52,8 +52,17 @@ export default class ComponentDashboard extends HTMLElement {
           position: relative;
         }
 
+        button, input[type="button"] {
+          line-height: 1;
+          height: 2.8rem;
+          padding: 0.5rem;
+          background: #3e86c5;
+          border: none;
+        }
+
         h6 {
           font-weight: bold;
+          font-size: 1.1rem;
         }
 
         textarea, select {
@@ -85,7 +94,6 @@ export default class ComponentDashboard extends HTMLElement {
           flex-direction: column;
           flex-basis: 62%;
           overflow-y: scroll;
-          padding-top: 2rem;
           max-width: 75rem;
         }
 
@@ -128,7 +136,6 @@ export default class ComponentDashboard extends HTMLElement {
 
         #toggle {
           transition: 250ms ease-in-out all;
-          font-size: 1.2rem;
           z-index: 1;
           height: 2rem;
           width: 8rem;

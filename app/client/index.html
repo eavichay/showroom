@@ -4,19 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./assets/fonts.css"></link>
   <link rel="stylesheet" href="/.showroom-app/milligram.min.css">
   <script src="/.showroom-app/marked.min.js"></script>
   <script src="/.showroom-app/jsoneditor.min.js"></script>
+  <script src="./showroom-integration.js"></script>
   <title>ShowRoom</title>
   <showroom-json-editor></showroom-json-editor>
   <style>
     html, body {
+      font-size: 10px;
       display: flex;
       height: 100%;
       flex-direction: column;
       margin: 0;
       padding: 0;
       background: #eeeeee;
+      font-family: 'Source Code Pro', 'Courier New', Courier, monospace
     }
 
     showroom-app {
@@ -88,8 +92,17 @@
       font-weight: 400;
     }
 
+    button, input[type="button"] {
+          line-height: 1;
+          height: 2.8rem;
+          padding: 0.5rem;
+          background: #3e86c5;
+          border: none;
+        }
+
     #big-title {
-      background-color: #913ec5;
+      font-family: 'Forum', Georgia, 'Times New Roman', Times, serif;
+      background-color: #3e86c5;
       color: white;
       letter-spacing: 0.3rem;
       padding: 0.5rem;
@@ -99,6 +112,9 @@
 
     h6 {
       font-weight: bold;
+      font-size: 1.1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px dotted grey;
     }
 
     input {
@@ -141,8 +157,9 @@
       }
     })()
       .then(() => app.loadComponents())
+      .then(() => window.showroomReady.resolve())
       .catch(err => setTimeout(() => {
-        app.descriptionView.setContent(err);
+        app.descriptionView.setContent(createError(err));
       }, 150));
   </script>
 </body>

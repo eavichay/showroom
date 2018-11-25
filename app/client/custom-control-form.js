@@ -17,10 +17,14 @@ export class CustomControlForm extends HTMLElement {
         }
         h6 {
           font-weight: bold;
+          font-size: 1.1rem;
+          padding-bottom: 0.5rem;
+          border-bottom: 1px dotted grey;
         }
         label {
           display: inline;
           font-weight: normal;
+          font-size: 1rem;
         }
         div.input-control {
           display: flex;
@@ -29,11 +33,15 @@ export class CustomControlForm extends HTMLElement {
           align-items: center;
           padding: 0.6rem;
         }
-        button {
-          font-size: 1rem;
+        button, input[type="button"] {
           line-height: 1;
-          height: 3.5rem;
+          height: 2.8rem;
           padding: 0.5rem;
+          background: #3e86c5;
+          border: none;
+        }
+        input[type='email'], input[type='number'], input[type='password'], input[type='search'], input[type='tel'], input[type='text'], input[type='url'], textarea, select {
+          height: 2.8rem;
         }
         h6:not(:first-child) {
           margin-top: 3rem;
@@ -67,6 +75,15 @@ export class CustomControlForm extends HTMLElement {
           case typeof type === 'string':
             input.setAttribute('value', type);
             input.setAttribute('type', 'text');
+            break;
+          case typeof type === 'boolean':
+            input = document.createElement('button');
+            input.classList.add('btn');
+            input.innerText = properties[prop];
+            input.onclick = () => {
+              this.targetComponent[prop] = !this.targetComponent[prop];
+              input.innerText = this.targetComponent[prop];
+            };
             break;
           case type instanceof Set:
             input = document.createElement('select');
@@ -153,6 +170,7 @@ export class CustomControlForm extends HTMLElement {
         this.triggers[fnName] = () => {
           functions[fnName]();
         };
+        window.showroom.triggers = this.triggers;
         btn.onclick = this.triggers[fnName];
       });
     }
