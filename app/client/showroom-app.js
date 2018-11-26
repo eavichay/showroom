@@ -41,22 +41,59 @@ Slim.tag('showroom-app', class extends Slim {
     });
   }
 
+  get useShadow () { return true; }
+
   get template () {
     return /*html*/`
+    <style>
+      @import url("/assets/main.css");
+      :host {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+      }
+
+      #component-list {
+        padding-left: 0.5rem;
+        border-right: var(--double-border);
+        box-shadow: 0px 0px 3px 2px rgba(0, 0, 0, 0.4);
+        z-index: 1;
+        min-width: 18rem;
+      }
+
+      #big-title {
+        margin: 0;
+        padding: 0.5rem;
+        padding-left: 1rem;
+        letter-spacing: 0.3rem;
+        font-weight: normal;
+        font-size: 1rem;
+        cursor: default;
+        background-color: var(--accent-color);
+        color: var(--lighter-text);
+        box-shadow: 0px 1px 3px 2px rgba(0, 0, 0, 0.4);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        z-index: 2;
+        font-family: 'Forum', Georgia, 'Times New Roman', Times, serif;
+      }
+
+      component-dashboard {
+        flex-grow: 1;
+      }
+    </style>
     <component-description s:id="descriptionView"></component-description>
-    <h1 id="big-title">SHOW•ROOM</h1>
-    <div class="hbox">
+    <h1 id="big-title">SHOWROOM</h1>
+    <div class="hbox grow">
       <div id="component-list">
-        <h6>Component List</h6>
+        <h3>Components</h3>
         <showroom-component-list
           s:repeat="sections as section"
           on-docs="onComponentDocs"
           on-select="onComponentSelected"
           ></showroom-component-list>
       </div>
-      <div id="main-view">
-          <component-dashboard s:id="dashboard"></component-dashboard>
-      </div>
+      <component-dashboard s:id="dashboard"></component-dashboard>
     </div>
     `;
   }

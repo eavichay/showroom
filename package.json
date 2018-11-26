@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node ./app/server/index.js --path ./example --port 3000",
     "dev": "nodemon ./app/server/index.js --path ./example --port 3000",
-    "test": "mocha -R progress --timeout 15000"
+    "test": "mocha -R progress --timeout 15000",
+    "serve": "node ./app/server/index.js --path ./example --port 80"
   },
   "repository": "https://github.com/eavichay/showroom",
   "bin": {

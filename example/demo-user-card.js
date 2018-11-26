@@ -63,7 +63,6 @@ customElements.define('demo-user-card', class extends LitElement {
     }
 
     #username {
-      font-size: 1.4rem;
       font-family: monospace;
       padding-left: 1rem;
     }

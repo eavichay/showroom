@@ -61,7 +61,7 @@ const template = /*html*/`
   <br/>
   Rank: {{data.rank}}<br/>
   Last Mission: {{data.lastMission}}</div>
-  <button class="btn btn-primary" click="startMission">Start Mission</button>
+  <button class="topcoat-button--large btn-primary" click="startMission">Start Mission</button>
   </div>
 `
 customElements.define('demo-component-avengers', class extends Slim {

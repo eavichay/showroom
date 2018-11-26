@@ -46,8 +46,7 @@ class TestUtils {
     this.testSubjectName = componentName;
     let lastTargetComponent = this.targetComponent;
     while (lastTargetComponent === this.targetComponent) {
-      const span = await find(this.page, `showroom-component-list li[data-component-name="${componentName}"] > span`);
-      await span.click();
+      await this.page.evaluate(((componentName) => showroom.setTestSubject(componentName)), componentName);
       this.targetComponent = await this.testSubject();
     }
     return this.targetComponent;

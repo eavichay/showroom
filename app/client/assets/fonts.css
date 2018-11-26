@@ -23,7 +23,7 @@
   font-family: 'Source Code Pro';
   font-style: bold;
   font-weight: 700;
-  src: local('Fira Mono Bold'), local('SourceCodePro-Bold'), url('./SourceCodePro-Bold.ttf') format('woff2');
+  src: local('Source Code Pro'), local('SourceCodePro-Bold'), url('./SourceCodePro-Bold.ttf') format('woff2');
 }
 
 @font-face {
@@ -31,4 +31,18 @@
   font-style: normal;
   font-weight: 400;
   src: local('Forum Regular'), local('Forum-Regular'), url('./Forum-Regular.ttf') format('woff2');
+}
+
+@font-face {
+  font-family: 'Source Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Source Sans'), local('SourceSansPro-Regular'), url('./SourceSansPro-Regular.ttf') format('woff2');
+}
+
+@font-face {
+  font-family: 'Source Sans';
+  font-style: bold;
+  font-weight: 700;
+  src: local('Source Sans Pro'), local('SourceSansPro-Bold'), url('./SourceSansPro-Bold.ttf') format('woff2');
 }

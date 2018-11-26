@@ -4,20 +4,13 @@ customElements.define('component-description', class extends HTMLElement {
     super();
     this._ = this.attachShadow({mode:'open'});
     this._.innerHTML = /*html*/`
-      <style>@import url("milligram.min.css");</style>
+      <style>@import url("/assets/main.css");</style>
       <style>
-        dialog {
-          width: 75vw;
-          height: 75vh;
-          overflow: auto;
-          top: 15%;
-        }
+
         #closeButton {
           position: sticky;
-          top: 2rem;
+          top: 0;
           left: 100%;
-          background: #3e86c5;
-          border: none;
         }
       </style>
       <dialog>
@@ -28,8 +21,9 @@ customElements.define('component-description', class extends HTMLElement {
 
   setContent (markdown) {
     this.modal.innerHTML = `
-    <button id="closeButton" tabindex="-1" class="btn btn-small">Close</button>
-    ${marked(markdown)}`;
+    <button id="closeButton" tabindex="-1" class="topcoat-button--large">Close</button>
+    <div style="width: 100%; overflow: auto;">
+    ${marked(markdown)}</div>`;
     this._.querySelector('#closeButton').onclick = () => {
       this.modal.close();
     };

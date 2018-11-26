@@ -58,7 +58,7 @@ component.mission = 'Save the world' // will trigger *taskselected* event
     <div style="background: lightgray; padding: 2rem; width: 450px;">
       <h5>This is a wrapping HTML around the component, defined in the showroom file describing the component</h1>
       <showroom-mount-point></showroom-mount-point>
-      <h6>This is the rest of the wrapping HTML around the component</h3>
+      <h3>This is the rest of the wrapping HTML around the component</h3>
     </div>
     `
 }
