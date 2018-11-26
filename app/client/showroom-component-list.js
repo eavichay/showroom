@@ -3,12 +3,27 @@ import '/.showroom-app/directives/repeat.js';
 
 Slim.tag('showroom-component-list',
 /*html*/`
+<style>
+  @import url("/assets/main.css");
+  :host {
+    display: block;
+    cursor: default;
+    margin-bottom: 0.8rem;
+    margin-right: 1rem;
+    border-bottom: 1px solid var(--accent-color);
+    border-image: var(--awesome-border);
+    border-image-slice: 1;
+    padding-bottom: 0.5rem;
+  }
+
+  
+</style>
 <details open>
   <summary>{{section.name}}</summary>
   <ul>
-    <li s:repeat="section as item" bind:data-component-name="item.component" style="line-height: 2.7rem; margin-top: 1.0rem; position: relative">
+    <li s:repeat="section as item" bind:data-component-name="item.component">
       <span click="onComponentClick">{{item.component}}</span>
-      <button class="btn btn-sm" bind:style="getButtonStyle(item)" click="onDocsClick">DOCS</button>
+      <button class="topcoat-button--large btn-sm" bind:style="getButtonStyle(item)" click="onDocsClick">DOCS</button>
     </li>
   </ul>
 </details>
@@ -21,6 +36,8 @@ Slim.tag('showroom-component-list',
       return 'display: none';
     }
   }
+
+  get useShadow () { return true; }
 
   onComponentClick (e) {
     const item = e.target.item;

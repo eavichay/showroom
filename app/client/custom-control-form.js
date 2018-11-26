@@ -4,10 +4,11 @@ export class CustomControlForm extends HTMLElement {
     super();
     this.targetComponent = targetComponent;
     this.formData = formData || {};
-    this._ = this.attachShadow({mode: 'open'});
+    this._ = this;//this.attachShadow({mode: 'open'});
     this.triggers = {};
     this._.innerHTML = /*html*/`
-      <style>@import url("/.showroom-app/milligram.css");
+      <style>
+        @import url("/assets/main.css");
         input[type='email'], input[type='number'], input[type='password'], input[type='search'], input[type='tel'], input[type='text'], input[type='url'], button, textarea, select {
           width: auto;
           margin: 0;
@@ -15,36 +16,24 @@ export class CustomControlForm extends HTMLElement {
         input[type], textarea, select {
           background-color: white;
         }
-        h6 {
-          font-weight: bold;
-          font-size: 1.1rem;
-          padding-bottom: 0.5rem;
-          border-bottom: 1px dotted grey;
-        }
         label {
           display: inline;
           font-weight: normal;
-          font-size: 1rem;
         }
         div.input-control {
+          min-height: 2.3rem;
           display: flex;
           flex-direction: row;
           justify-content: space-between;
           align-items: center;
-          padding: 0.6rem;
+          color: var(--dark-text);
         }
-        button, input[type="button"] {
-          line-height: 1;
-          height: 2.8rem;
-          padding: 0.5rem;
-          background: #3e86c5;
-          border: none;
-        }
-        input[type='email'], input[type='number'], input[type='password'], input[type='search'], input[type='tel'], input[type='text'], input[type='url'], textarea, select {
-          height: 2.8rem;
-        }
-        h6:not(:first-child) {
-          margin-top: 3rem;
+        h3 {
+          padding-bottom: 1rem;
+          margin-bottom: 0.5rem;
+          border-bottom: 1px solid var(--accent-color);
+          border-image: var(--awesome-border-heading);
+          border-image-slice: 1;
         }
       </style>
     `;
@@ -58,7 +47,7 @@ export class CustomControlForm extends HTMLElement {
     const { targetComponent, formData } = this;
     const { properties, attributes, functions } = formData;
     if (properties) {
-      const h = document.createElement('h6');
+      const h = document.createElement('h3');
       h.innerText = 'Properties';
       this._.appendChild(h);
       Object.keys(properties).forEach(prop => {
@@ -78,7 +67,7 @@ export class CustomControlForm extends HTMLElement {
             break;
           case typeof type === 'boolean':
             input = document.createElement('button');
-            input.classList.add('btn');
+            input.classList.add('topcoat-button--large');
             input.innerText = properties[prop];
             input.onclick = () => {
               this.targetComponent[prop] = !this.targetComponent[prop];
@@ -98,6 +87,7 @@ export class CustomControlForm extends HTMLElement {
             break;
           default:
             input = document.createElement('button');
+            input.classList.add('topcoat-button');
             input.innerText = 'Edit ' + type.constructor.name;
             input.onclick = () => {
               this.dispatchEvent(new CustomEvent('open-json-editor',
@@ -114,6 +104,9 @@ export class CustomControlForm extends HTMLElement {
             }
         }
         const label = document.createElement('label');
+        if (input.localName !== 'button') {
+          input.classList.add('topcoat-text-input');
+        }
         label.innerText = prop;
         wrapper.appendChild(label);
         wrapper.appendChild(input);
@@ -125,7 +118,7 @@ export class CustomControlForm extends HTMLElement {
       })
     }
     if (attributes) {
-      const h = document.createElement('h6');
+      const h = document.createElement('h3');
       h.innerText = 'Attributes';
       this._.appendChild(h);
       Object.keys(attributes).forEach((attr) => {
@@ -133,6 +126,7 @@ export class CustomControlForm extends HTMLElement {
         const input = document.createElement('input');
         input.type = 'text';
         input.setAttribute('data-target-attribute', attr);
+        input.classList.add('topcoat-text-input');
         input.value = value;
         const label = document.createElement('label');
         label.innerText = attr;
@@ -154,13 +148,14 @@ export class CustomControlForm extends HTMLElement {
       });
     }
     if (functions) {
-      const h = document.createElement('h6');
+      const h = document.createElement('h3');
       h.innerText = 'Functions';
       this._.appendChild(h);
       Object.keys(functions).forEach(fnName => {
         const wrapper = document.createElement('div');
         wrapper.classList.add('input-control');
         const btn = document.createElement('button');
+        btn.classList.add('topcoat-button--large');
         const label = document.createElement('label');
         label.innerText = fnName;
         btn.innerText = 'Invoke';

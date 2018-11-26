@@ -4,7 +4,7 @@ customElements.define('showroom-json-editor', class extends HTMLElement {
     super();
     this.root = this.attachShadow({mode: 'open'});
     this.root.innerHTML = /*html*/`
-      <style>@import url("jsoneditor.min.css");</style>
+      <style>@import url("jsoneditor.min.css");@import url("/assets/main.css");</style>
       <style>
         :host {
           position: fixed;
@@ -69,7 +69,7 @@ customElements.define('showroom-json-editor', class extends HTMLElement {
     this.btnSubmit.onclick = () => this.submitData();
     const controls = this.root.querySelector('#controls');
     controls.attachShadow({mode: 'open'});
-    controls.shadowRoot.innerHTML = '<style>@import url("milligram.min.css");</style>';
+    controls.shadowRoot.innerHTML = '<style>@import url("/assets/main.css");</style>';
     controls.shadowRoot.appendChild(this.root.querySelector('.spacer'));
     controls.shadowRoot.appendChild(this.btnSubmit);
     controls.shadowRoot.appendChild(this.btnCancel);

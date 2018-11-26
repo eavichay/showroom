@@ -12,19 +12,18 @@ export default class ComponentRenderer extends HTMLElement {
     this._.innerHTML = /*html*/`
       <style>
       :host {
+        all: initial;
+        font-weight: initial;
         font-family: initial;
-        font-size: initial;
+        font: initial;
         width: 100%;
         height: 100%;
-        display: inherit;
-        align-items: inherit;
         justify-content: inherit;
       }
       </style>
       <div id="fallback"></div>
       ${outerHTML}
     `;
-
     this.fallbackContainer = this._.querySelector('#fallback');
   }
 

@@ -43,34 +43,15 @@ export default class ComponentDashboard extends HTMLElement {
   render () {
     this._.innerHTML = /*html*/`
       <style>
-        @import url("/.showroom-app/milligram.min.css");
+        @import url("/assets/main.css");
         :host {
           display: flex;
           flex-direction: column;
-          flex-grow: 1;
           justify-content: space-between;
           position: relative;
-        }
-
-        button, input[type="button"] {
-          line-height: 1;
-          height: 2.8rem;
-          padding: 0.5rem;
-          background: #3e86c5;
-          border: none;
-        }
-
-        h6 {
-          font-weight: bold;
-          font-size: 1.1rem;
-        }
-
-        textarea, select {
-          background-color: white;
-        }
-
-        textarea {
-          overflow: hidden;
+          flex-grow: 1;
+          background: white;
+          overflow-y: hidden;
         }
 
         :host([center]) #renderer-container {
@@ -82,39 +63,45 @@ export default class ComponentDashboard extends HTMLElement {
           display: inline-flex;
           flex-grow: 1;
           padding: 2rem;
-          border-bottom: 3px double lightgrey;
+          border-bottom: 3px double #aaaaaa;
           background-color: white;
           overflow: auto;
         }
 
         #dashboard {
-          border-right: 3px double lightgrey;
-          width: fit-content;
+          /*idth: fit-content;*/
           display: inline-flex;
           flex-direction: column;
-          flex-basis: 62%;
-          overflow-y: scroll;
-          max-width: 75rem;
-        }
-
-        :host([collapsed]) #wrapper {
-          height: 0rem;
+          overflow-y: auto;
+          flex-basis: 64%;
+          border-right: var(--double-border);
+          padding: 0 1rem 3rem 1rem;
         }
 
         #wrapper {
-          display: inline-flex;
+          border-top: var(--double-border);
+          display: flex;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
           flex-direction: row;
-          position: relative;
-          transition: 250ms ease-in-out height;
-          height: 35rem;
+          height: 22rem;
+          transform: translate3d(0, 0, 0);
+          transition: 0.25s ease-in-out transform;
+          background-color: var(--default-bg);
+        }
+
+        :host([collapsed]) #wrapper {
+          transform: translate3d(0, 22rem, 0);
         }
 
         #eventLogWrapper {
-          position: relative;
+          padding: 0 1rem 0 1rem;
           display: block;
-          flex-grow: 1;
           overflow-y: scroll;
-          padding-top: 2rem;
+          flex-direction: column;
+          flex-basis: 36%;
         }
 
         #eventLog {
@@ -123,49 +110,59 @@ export default class ComponentDashboard extends HTMLElement {
           overflow: visible;
         }
 
-        #eventLogWrapper input[type="button"] {
-          position: absolute;
-          right: 0.5rem;
-          top: 0.5rem;
-        }
-
         :host([collapsed]) #toggle {
           top: -2.5rem;
           height: 3rem;
+          width: 3rem;
+          left: Calc(50% - 1rem);
         }
 
         #toggle {
           transition: 250ms ease-in-out all;
           z-index: 1;
-          height: 2rem;
-          width: 8rem;
+          width: 6rem;
           position: absolute;
-          left: calc(50% - 3rem);
-          top: -1rem;
-          padding: 0;
-          line-height: 1rem;
+          left: calc(50% - 2rem);
+          top: -0.9rem;
+          line-height: 1.5rem;
+          font-weight: bold;
+          font-family: initial;
         }
 
-        custom-control-form {
-          margin-bottom: 3rem;
+        #clear-events {
+          position: absolute;
+          right: 0.5rem;
+          top: 0.5rem;
+        }
+
+        .event-data {
+          font-family: "Fira Mono", monospace;
+          font-size: 0.8rem;
+          font-weight: normal;
+          color: var(--dark-text);
+          padding-left: 1rem;
         }
       </style>
       <div id="renderer-container">
       </div>
       <div id="wrapper">
-        <button id="toggle">↕</button>
+        <button id="toggle" class="topcoat-button--large">↕</button>
         <div id="dashboard"></div>
         <div id="eventLogWrapper">
-          <h6>Events</h6>
+          <h3>Events</h3>
+          <button id="clear-events" class="topcoat-button--large">Clear</button>
           <div id="eventLog">
         </div>
         </div>
       </div>
+      <span id="footer"></span>
     `;
+    this.footer = this._.getElementById('footer');
     this.rendererContainer = this._.getElementById('renderer-container');
     this.dashboard = this._.getElementById('dashboard');
     this.eventLog = this._.getElementById('eventLog');
     this.toggle = this._.getElementById('toggle');
+    const clearButton = this._.getElementById('clear-events');
     this.toggle.onclick = () => {
       if (this.hasAttribute('collapsed')) {
         this.removeAttribute('collapsed');
@@ -174,6 +171,7 @@ export default class ComponentDashboard extends HTMLElement {
       }
     }
     this.dashboard.classList.add('container');
+    clearButton.onclick = () => this.clearEvents();
   }
 
   get component () {
@@ -199,19 +197,13 @@ export default class ComponentDashboard extends HTMLElement {
           banner.innerHTML = `
             <details>
               <summary>Event: ${eventName}</summary>
-              <pre>${stringified}</pre>
+              <pre class="event-data">${stringified}</pre>
             </details>
           `
           this.eventLog.appendChild(banner);
           this.eventLog.logged.push(event);
         });
       });
-      const clearButton = document.createElement('input');
-      clearButton.type = 'button';
-      clearButton.value = 'Clear';
-      clearButton.classList.add('btn', 'btn-sm');
-      this._.querySelector('#eventLogWrapper').appendChild(clearButton);
-      clearButton.onclick = () => this.clearEvents();
     }
   }
 
@@ -222,18 +214,19 @@ export default class ComponentDashboard extends HTMLElement {
 
   autoResizeTextArea (el) {
     el.onkeydown = () => {
-      el.style.cssText = 'min-height:auto';
       requestAnimationFrame( () => {
         el.style.cssText = 'min-height:' + el.scrollHeight + 'px';
+        el.scrollIntoView({block: 'end', behavior: 'smooth'});
       });
     };
-    el.onkeydown();
+    el.style.cssText = 'min-height:' + el.scrollHeight + 'px';
   }
 
   addInnerHTMLForm (innerHTML) {
     if (innerHTML) {
       const editor = document.createElement('textarea');
-      const label = document.createElement('h6')
+      editor.classList.add('topcoat-textarea');
+      const label = document.createElement('h3')
       label.innerText = 'Inner HTML';
       this.dashboard.appendChild(label);
       this.dashboard.appendChild(editor);
@@ -249,11 +242,12 @@ export default class ComponentDashboard extends HTMLElement {
   addOuterHTMLForm (outerHTML) {
     if (outerHTML) {
       const editor = document.createElement('textarea');
-      const label = document.createElement('h6')
+      editor.classList.add('topcoat-textarea');
+      const label = document.createElement('h3')
       label.innerText = 'Wrapping HTML';
       const innerLabel = document.createElement('span');
-      innerLabel.innerText = '(use the <showroom-mount-point> node to position the custom component)';
-      innerLabel.style.cssText = 'font-size: 1.2rem; font-weight: normal; padding-left: 1rem;';
+      innerLabel.innerHTML = '<br/>(use the &lt;showroom-mount-point&gt; node to position the custom component)';
+      innerLabel.style.cssText = 'font-size: 0.8rem; font-weight: normal; padding-left: 1rem;';
       label.appendChild(innerLabel);
       this.dashboard.appendChild(label);
       this.dashboard.appendChild(editor);

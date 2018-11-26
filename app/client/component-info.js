@@ -1,6 +1,6 @@
 const template = /*html*/`
 <style>
-  @import url("/.showroom-app/milligram.min.css");
+  @import url("/assets/main.css");
   :host {
     display: inline-flex;
     flex-direction: column;
@@ -10,7 +10,7 @@ const template = /*html*/`
     height: 100%;
     width: 300px;
     background: #eeeeee;
-    border-left: 3px double lightgrey;
+    border-left: 3px double #aaaaaa;
     z-index: 1;
     transition: 250ms ease-in-out right;
     padding: 0.5rem;
@@ -28,7 +28,6 @@ const template = /*html*/`
   #toggle {
     transition: 250ms ease-in-out all;
     z-index: 1;
-    font-size: 13px;
     width: 2rem;
     height: 8rem;
     position: absolute;
