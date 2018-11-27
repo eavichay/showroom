@@ -4,7 +4,7 @@ export class CustomControlForm extends HTMLElement {
     super();
     this.targetComponent = targetComponent;
     this.formData = formData || {};
-    this._ = this;//this.attachShadow({mode: 'open'});
+    this._ = this.attachShadow({mode: 'open'});
     this.triggers = {};
     this._.innerHTML = /*html*/`
       <style>
@@ -113,7 +113,12 @@ export class CustomControlForm extends HTMLElement {
         this._.appendChild(wrapper);
         this.targetComponent[prop] = type.value || type;
         input.addEventListener('change', (evt) => {
-          this.targetComponent[prop] = input.value;
+          const type = input.getAttribute('type');
+          if (type === 'number') {
+            this.targetComponent[prop] = parseFloat(input.value);
+          } else {
+            this.targetComponent[prop] = input.value;
+          }
         })
       })
     }

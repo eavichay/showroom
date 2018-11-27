@@ -6,6 +6,7 @@ customElements.define('showroom-json-editor', class extends HTMLElement {
     this.root.innerHTML = /*html*/`
       <style>@import url("jsoneditor.min.css");@import url("/assets/main.css");</style>
       <style>
+
         :host {
           position: fixed;
           left: 0;
@@ -25,14 +26,18 @@ customElements.define('showroom-json-editor', class extends HTMLElement {
           border-bottom: 1px solid #3e86c5;
         }
 
-        dialog[open] {
-          display: flex;
+        dialog {
+          opacity: 0;
           position: absolute;
           top: 15%;
           width: 70vw;
           height: 70vh;
           flex-direction: column;
           justify-content: stretch;
+        }
+
+        dialog[open] {
+          display: flex;
         }
 
         .jsoneditor-sort, .jsoneditor-transform {
@@ -46,7 +51,7 @@ customElements.define('showroom-json-editor', class extends HTMLElement {
 
         #controls {
           display: inline-grid;
-          grid-template-columns: 1fr 0fr 0fr;
+          grid-template-columns: 1fr 5rem 5rem;
           grid-gap: 1rem;
         }
       </style>
@@ -67,6 +72,8 @@ customElements.define('showroom-json-editor', class extends HTMLElement {
     this.btnCancel = this.root.querySelector('#cancel');
     this.btnCancel.onclick = () => this.close();
     this.btnSubmit.onclick = () => this.submitData();
+    this.btnSubmit.classList.add('topcoat-button--cta');
+    this.btnCancel.classList.add('topcoat-button--large--quiet');
     const controls = this.root.querySelector('#controls');
     controls.attachShadow({mode: 'open'});
     controls.shadowRoot.innerHTML = '<style>@import url("/assets/main.css");</style>';

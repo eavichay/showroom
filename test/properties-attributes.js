@@ -12,7 +12,7 @@ describe('showroom::setProperty', () => {
   });
 
   it('Should set property via UI', async () => {
-    const input = await showroom.find('component-dashboard // #dashboard custom-control-form // input[data-target-property="title"]', root);
+    const input = await showroom.find('// component-dashboard // #dashboard custom-control-form // input[data-target-property="title"]', root);
     await input.click({clickCount: 2});
     await input.type('New Title');
     await page.keyboard.press('Enter');
@@ -21,7 +21,7 @@ describe('showroom::setProperty', () => {
   });
 
   it('Should set attribute via UI', async () => {
-    const input = await showroom.find('component-dashboard // #dashboard custom-control-form // input[data-target-attribute="text-color"]', root);
+    const input = await showroom.find('// component-dashboard // #dashboard custom-control-form // input[data-target-attribute="text-color"]', root);
     await input.click({clickCount: 2});
     await input.type('blue');
     await page.keyboard.press('Enter');

@@ -57,14 +57,13 @@ export default class ComponentDashboard extends HTMLElement {
         :host([center]) #renderer-container {
           justify-content: center;
           align-items: center;
+          display: flex;
         }
 
         #renderer-container {
           display: inline-flex;
           flex-grow: 1;
           padding: 2rem;
-          border-bottom: 3px double #aaaaaa;
-          background-color: white;
           overflow: auto;
         }
 
