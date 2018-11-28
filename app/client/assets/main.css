@@ -27,8 +27,10 @@
   flex-direction: column;
 }
 
-*:focus {
-  outline: none;
+*:focus, .topcoat-button:focus, .topcoat-button--large:focus {
+  outline: none !important;
+  box-shadow: unset;
+  border: 1px solid #9daca9;
 }
 
 details {
