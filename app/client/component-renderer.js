@@ -11,15 +11,7 @@ export default class ComponentRenderer extends HTMLElement {
     this._ = this.shadowRoot;
     this._.innerHTML = /*html*/`
       <style>
-      :host {
-        all: initial;
-        font-weight: initial;
-        font-family: initial;
-        font: initial;
-        width: 100%;
-        height: 100%;
-        justify-content: inherit;
-      }
+      @import url("./assets/normalize.css");
       </style>
       <div id="fallback"></div>
       ${outerHTML}
@@ -72,7 +64,7 @@ export default class ComponentRenderer extends HTMLElement {
     // mountpoint.outerHTML = `<${name.nodeValue} ${attributesString}></${name.nodeValue}>`;
     range.insertNode(this.component);
     window.showroomGlobalStyles.forEach(styleNode => {
-      this._.appendChild(styleNode);
+      this._.appendChild(styleNode.cloneNode(true));
     });
   }
 

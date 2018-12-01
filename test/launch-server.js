@@ -1,5 +1,4 @@
 const path = require('path');
-const showroomServer = require('../app/server');
 const puppeteer = require('puppeteer');
 const showroomFactory = require('../puppeteer/index.js');
 

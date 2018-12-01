@@ -6,6 +6,7 @@ export class CustomControlForm extends HTMLElement {
     this.formData = formData || {};
     this._ = this.attachShadow({mode: 'open'});
     this.triggers = {};
+    this.watchers = [];
     this._.innerHTML = /*html*/`
       <style>
         @import url("/assets/main.css");
@@ -41,9 +42,8 @@ export class CustomControlForm extends HTMLElement {
   }
 
   buildForm () {
-    if (this.getAttribute('type') === 'object') {
-      this._.appendChild(document.createElement('br'));
-    }
+    this.watchers.forEach( watcher => watcher() );
+    this.watchers = [];
     const { targetComponent, formData } = this;
     const { properties, attributes, functions } = formData;
     if (properties) {
@@ -55,7 +55,6 @@ export class CustomControlForm extends HTMLElement {
         const wrapper = document.createElement('div');
         wrapper.classList.add('input-control');
         let input = document.createElement('input');
-        input.setAttribute('data-target-property', prop);
         switch (true) {
           case typeof type === 'number': 
             input.setAttribute('type', 'number');
@@ -66,12 +65,12 @@ export class CustomControlForm extends HTMLElement {
             input.setAttribute('type', 'text');
             break;
           case typeof type === 'boolean':
-            input = document.createElement('button');
+            input = document.createElement('input');
+            input.setAttribute('type', 'button');
             input.classList.add('topcoat-button--large');
-            input.innerText = properties[prop];
+            input.value = properties[prop];
             input.onclick = () => {
-              this.targetComponent[prop] = !this.targetComponent[prop];
-              input.innerText = this.targetComponent[prop];
+              showroom.setProperty(prop, !showroom.getProperty(prop));
             };
             break;
           case type instanceof Set:
@@ -86,9 +85,11 @@ export class CustomControlForm extends HTMLElement {
             type.value = type.values().next().value;
             break;
           default:
-            input = document.createElement('button');
+            input = document.createElement('input');
+            input.setAttribute('type', 'button');
+            input.setAttribute('data-type', 'object');
             input.classList.add('topcoat-button');
-            input.innerText = 'Edit ' + type.constructor.name;
+            input.value = 'Edit ' + type.constructor.name;
             input.onclick = () => {
               this.dispatchEvent(new CustomEvent('open-json-editor',
               {
@@ -103,8 +104,9 @@ export class CustomControlForm extends HTMLElement {
               }));
             }
         }
+        input.setAttribute('data-target-property', prop);
         const label = document.createElement('label');
-        if (input.localName !== 'button') {
+        if (input.getAttribute('type') !== 'button') {
           input.classList.add('topcoat-text-input');
         }
         label.innerText = prop;
@@ -112,12 +114,19 @@ export class CustomControlForm extends HTMLElement {
         wrapper.appendChild(input);
         this._.appendChild(wrapper);
         this.targetComponent[prop] = type.value || type;
+        if (input.getAttribute('data-type') !== 'object') {
+          this.watchers.push(showroom.on('property-changed', ({detail}) => {
+            if (detail.prop === prop) {
+              input.value = this.targetComponent[prop].toString();
+            }
+          }));
+        }
         input.addEventListener('change', (evt) => {
           const type = input.getAttribute('type');
           if (type === 'number') {
-            this.targetComponent[prop] = parseFloat(input.value);
+            showroom.setProperty(prop, parseFloat(input.value));
           } else {
-            this.targetComponent[prop] = input.value;
+            showroom.setProperty(prop, input.value);
           }
         })
       })
@@ -149,7 +158,12 @@ export class CustomControlForm extends HTMLElement {
           } else {
             targetComponent.removeAttribute(attr);
           }
-        })
+        });
+        this.watchers.push(showroom.on('attribute-changed', ({detail}) => {
+          if (detail.attr === attr) {
+            input.value = detail.value.toString();
+          }
+        }));
       });
     }
     if (functions) {

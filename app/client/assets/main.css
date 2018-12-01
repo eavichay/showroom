@@ -1,3 +1,4 @@
+@import url("/assets/fonts.css");
 @import url("/assets/topcoat-desktop-light.css");
 
 :root {
@@ -11,6 +12,13 @@
   --double-border: 4px double var(--light-text);
   --awesome-border: linear-gradient(to right, var(--accent-color-transparent) 5%, var(--accent-color) 10%, var(--accent-color-transparent) 90%);
   --awesome-border-heading: linear-gradient(to right, var(--accent-color-transparent) 3%, var(--accent-color) 10%, var(--accent-color-transparent) 65%)
+}
+
+:host {
+  all: initlal;
+  font-family: Source Sans, sans-serif;
+  font-weight: normal;
+  font-size: 12pt;
 }
 
 .grow {

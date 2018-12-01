@@ -37,7 +37,8 @@ const log = (...args) => {
 
 const doSearch = async (rootPath) => {
   info('Searching in', rootPath);
-  const files = await readdir(rootPath);
+  const files = (await readdir(rootPath)).sort();
+  console.log(files);
   await Promise.all(files.map(async filename => {
     const filePath = path.join(rootPath, filename);
     const stats = await lstat(filePath);

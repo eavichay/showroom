@@ -46,8 +46,10 @@ Slim.tag('showroom-app', class extends Slim {
   get template () {
     return /*html*/`
     <style>
+      @import url("/assets/normalize.css");
       @import url("/assets/main.css");
       :host {
+        font-size: 16px;
         display: flex;
         flex-direction: column;
         width: 100%;

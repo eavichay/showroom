@@ -38,8 +38,9 @@ class TestUtils {
   }
 
   async clearEventList () {
-    const clearEventButton = await find(this.page, 'component-dashboard // input[value="Clear"]');
-    await clearEventButton.click();
+    await this.page.evaluate(() => {
+      dashboard.clearEvents();
+    });
   }
 
   async setTestSubject (componentName) {
@@ -54,7 +55,6 @@ class TestUtils {
 
   async testSubject () {
     const handle = await this.page.evaluateHandle(() => {
-      window.dashboard.events = [];
       return window.dashboard.targetComponent;
     });
     return handle;
@@ -88,7 +88,7 @@ class TestUtils {
   async setProperty (property, value, target) {
     const resolvedTarget = target || this.targetComponent;
     await this.page.evaluate((target, prop, value) => {
-      target[prop] = value;
+      showroom.setProperty(prop, value);
     }, resolvedTarget, property, value);
     return resolvedTarget;
   }
@@ -96,7 +96,7 @@ class TestUtils {
   async setAttribute (name, value, target) {
     const resolvedTarget = target || this.targetComponent;
     await this.page.evaluate((target, name, value) => {
-      target.setAttribute(name, value);
+      showroom.setAttribute(name, value);
     }, resolvedTarget, name, value);
     return resolvedTarget;
   }

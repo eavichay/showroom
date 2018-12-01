@@ -75,6 +75,7 @@ async function startServer () {
   const dir = (module, ...rest) => path.join(path.dirname(require.resolve(module)), ...rest);
   const allowedPaths = [
     path.join(__dirname, '/../client'),
+    process.cwd(),
     dir('jsoneditor', 'dist'),
     dir('marked', '..'),
     dir('milligram'),

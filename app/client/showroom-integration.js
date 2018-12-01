@@ -16,6 +16,11 @@ class Showroom {
 
   setProperty(prop, value) {
     dashboard.targetComponent[prop] = value;
+    window.dispatchEvent(new CustomEvent('property-changed', {
+      detail: {
+        prop, value
+      }
+    }))
   }
 
   getProperty(prop) {
@@ -24,10 +29,21 @@ class Showroom {
 
   setAttribute(attr, value) {
     dashboard.targetComponent.setAttribute(attr, value);
+    window.dispatchEvent(new CustomEvent('attribute-changed', {
+      detail: {
+        attr, value
+      }
+    }))
   }
 
   toggleAttribute(attr) {
     dashboard.targetComponent.toggleAttribute(attr);
+    window.dispatchEvent(new CustomEvent('attribute-toogled'),{
+      detail: {
+        attr,
+        value: dashboard.targetComponent.hasAttribute(attr)
+      }
+    });
   }
 
   getAttribute(attr) {
@@ -40,11 +56,24 @@ class Showroom {
 
   trigger(fnName) {
     this.triggers[fnName]();
+    window.dispatchEvent(new CustomEvent('trigger', {
+      detail: {
+        fnName,
+        trigger: this.triggers[fnName]
+      }
+    }));
   }
 
   clearEventList() {
     dashboard.clearEvents();
+    window.dispatchEvent(new CustomEvent('events-cleared'));
   }
+
+  on (eventName, callback) {
+    window.addEventListener(eventName, callback);
+    return () => window.removeEventListener(eventName, callback);
+  }
+  
 
 }
 
