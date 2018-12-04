@@ -21,6 +21,10 @@ export default {
   .vbox {
     display: flex;
     flex-direction: column;
+    text-align: center;
+  }
+  a:visited, a {
+    text-decoration: none;
   }
   #big-title {
     margin: 0;
@@ -40,6 +44,7 @@ export default {
   <h1 id="big-title">SHOWROOM</h1>
   <h3 style="text-align: center;">The Next-Generation<br/>Web Components Development and Testing environment</h2>
   <img src="https://raw.githubusercontent.com/webcomponents/webcomponents-icons/master/logo/logo_256x256.png" width="128" height="128"/>
+  <a href="https://github.com/eavichay/showroom">Project in Github</a>
 </div>
 
 

@@ -7,7 +7,6 @@ export default {
 
   // customized element
   extends: 'input',
-  centered: true,
   attributes: {
     currency: 'USD'
   },

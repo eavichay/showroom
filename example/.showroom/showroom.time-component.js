@@ -3,6 +3,5 @@ export default {
   section: 'Vanilla',
   description: '# Vanilla component',
   path: '/timer-component.js',
-  events: ['tick-tock'],
-  centered: true,
+  events: ['tick-tock']
 }

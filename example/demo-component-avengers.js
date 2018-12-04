@@ -3,25 +3,37 @@ import '/.showroom-app/directives/repeat.js';
 
 const template = /*html*/`
 <style>
-  @import url("https://unpkg.com/bootstrap@4.1.3/dist/css/bootstrap.min.css");
 
   ::slotted(span) {
     color: green;
   }
   :host {
+    background: url(/avengersbg.jpeg);
+    background-size: cover;
+    background-blend-mode: screen;
+    background-color: lightslategray;
     font-family: sans-serif;
-    border: 1px solid black;
     padding: 1rem;
     padding-top: 0;
     padding-right: 0;
     position: relative;
     display: flex;
-    background: wheat;
+    height: 19rem;
+    font-size: 12px;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0px 5px 4px 1px rgba(0, 0, 0, 0.5);
   }
 
   :host .container {
     padding-right: 0;
     padding-top: 0;
+    background: rgba(255, 255, 255, 0.4);
+    position: sticky;
+    left: 100%;
+    top: 0;
+    border-left: 1px solid darkgrey;
+    height: 20rem;
   }
 
   :host ul {
@@ -44,7 +56,19 @@ const template = /*html*/`
     width: 100%;
     color: {{textColor}};
     background-color: {{accentColor}};
+    box-sizing: border-box;
   }
+
+  button#startMissionBtn {
+    background-color: {{accentColor}};
+    color: white;
+    position: sticky;
+    top: 100%;
+    width: 100%;
+    height: 2rem;
+    letter-spacing: 0.05rem;
+  }
+
   </style>
   <slot></slot>
   <div class="container">
@@ -61,7 +85,7 @@ const template = /*html*/`
   <br/>
   Rank: {{data.rank}}<br/>
   Last Mission: {{data.lastMission}}</div>
-  <button class="topcoat-button--large btn-primary" click="startMission">Start Mission</button>
+  <button id="startMissionBtn" class="topcoat-button--large btn-primary" click="startMission">Start Mission</button>
   </div>
 `
 customElements.define('demo-component-avengers', class extends Slim {

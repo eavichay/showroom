@@ -63,6 +63,22 @@ class Showroom {
       }
     }
     this.utils = await testUtils(this.page);
+
+    // API borrowing
+    this.getAttribute = this.utils.getAttribute.bind(this.utils);
+    this.setTestSubject = this.utils.setTestSubject.bind(this.utils);
+    this.test = this.utils.setTestSubject.bind(this.utils); // alias
+    this.setAttribute = this.utils.setAttribute.bind(this.utils);
+    this.hasAttribute = this.utils.hasAttribute.bind(this.utils);
+    this.find = this.utils.find.bind(this.utils);
+    this.clearEventList = this.utils.clearEventList.bind(this.utils);
+    this.getEventList = this.utils.getEventList.bind(this.utils);
+    this.getTextContent = this.utils.getTextContent.bind(this.utils);
+    this.isVisible = this.utils.isVisible.bind(this.utils);
+    this.getProperty = this.utils.getProperty.bind(this.utils);
+    this.setProperty = this.utils.setProperty.bind(this.utils);
+    this.trigger = this.utils.trigger.bind(this.utils);
+
     return this;
   }
 

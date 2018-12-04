@@ -32,7 +32,7 @@ Slim.tag('showroom-app', class extends Slim {
   }
 
   loadComponentByHash () {
-    this.sections.forEach(section => {
+    this.sections && this.sections.forEach(section => {
       section.forEach((module) => {
         if (`#${module.component}` === window.location.hash && this.currentModule !== module) {
           this.onComponentSelected(module);

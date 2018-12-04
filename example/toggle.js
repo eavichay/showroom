@@ -1,7 +1,9 @@
 dashboard.setAttribute('collapsed', '');
 showroom.setTestSubject('Welcome');
 
-window.location.hash = 'Welcome';
+setTimeout( () => {
+  window.location.hash = 'Welcome';
+}, 5)
 
 setTimeout( () => {
   window.addEventListener('hashchange', () => {

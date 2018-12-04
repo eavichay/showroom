@@ -55,10 +55,9 @@ component.mission = 'Save the world' // will trigger *taskselected* event
   },
   innerHTML: `<img width="64" height="64" src="/avengers.png">`,
   outerHTML: /*html*/`
-    <div style="background: lightgray; padding: 2rem; width: 450px;">
-      <h5>This is a wrapping HTML around the component, defined in the showroom file describing the component</h1>
+
+    <div style="padding: 1rem; width: 100%; max-width: 450px; justify-self: center;">
       <showroom-mount-point></showroom-mount-point>
-      <h3>This is the rest of the wrapping HTML around the component</h3>
     </div>
     `
 }
