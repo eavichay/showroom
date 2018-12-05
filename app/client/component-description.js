@@ -19,15 +19,29 @@ customElements.define('component-description', class extends HTMLElement {
     this.modal = this._.querySelector('dialog');
   }
 
-  setContent (markdown) {
+  close () {
+    this.modal.close();
+  }
+
+  open () {
+    if (!this.modal.open) {
+      this.modal.showModal();
+    }
+  }
+
+  replaceContent (markdown) {
     this.modal.innerHTML = `
     <button id="closeButton" tabindex="-1" class="topcoat-button--large">Close</button>
     <div style="width: 100%; overflow: auto;">
     ${marked(markdown)}</div>`;
+  }
+
+  setContent (markdown) {
+    this.replaceContent(markdown);
+    this.open();
     this._.querySelector('#closeButton').onclick = () => {
       this.modal.close();
     };
-    this.modal.showModal();
   }
 
 });

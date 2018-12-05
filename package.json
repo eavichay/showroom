@@ -7,7 +7,8 @@
     "start": "node ./app/server/index.js --path ./example --port 3001",
     "dev": "nodemon ./app/server/index.js --path ./example --port 3000",
     "test": "mocha -R progress --timeout 15000",
-    "serve": "node ./app/server/index.js --path ./example --port 80"
+    "serve": "node ./app/server/index.js --path ./example --port 80",
+    "prepublish": "jsdoc ./puppeteer/index.js test-utils.js README.md -d docs"
   },
   "repository": "https://github.com/eavichay/showroom",
   "bin": {
@@ -17,18 +18,20 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.4.1",
+    "html-validator": "^3.1.3",
+    "jsdoc": "^3.5.5",
     "jsoneditor": "^5.24.7",
     "koa": "^2.5.3",
     "koa-mount": "^4.0.0",
+    "koa-sslify": "^2.1.2",
     "koa-static": "^5.0.0",
     "marked": "^0.5.1",
     "milligram": "^1.3.0",
+    "puppeteer": "^1.9.0",
     "slim-js": "^4.0.5",
-    "yargs": "^12.0.2",
-    "puppeteer": "^1.9.0"
+    "yargs": "^12.0.2"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
     "mocha": "^5.2.0"
   }
 }

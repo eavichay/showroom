@@ -1,2 +1,7 @@
 example
 test
+docs
+.vscode
+.nyc_output
+coverage
+.openode

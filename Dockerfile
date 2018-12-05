@@ -3,6 +3,7 @@ FROM node:10-alpine
 WORKDIR /opt/app
 
 ENV PORT=80
+ENV FORCE_SSL=true
 
 RUN touch /usr/bin/start.sh # this is the script which will run on start
 

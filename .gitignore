@@ -2,3 +2,5 @@ node_modules
 .vscode
 package-lock.json
 .openode
+.nyc_output
+coverage

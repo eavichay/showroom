@@ -3,6 +3,7 @@ const DemoUserCard = customElements.get('demo-user-card');
 
 export default {
   component: 'demo-user-card',
+  alias: 'Lit: <demo-user-card>',
   section: 'Lit-Element',
   path: '/demo-user-card.js',
   events: ['data-loaded'],

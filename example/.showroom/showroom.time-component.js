@@ -1,7 +1,7 @@
 export default {
   component: 'timer-component',
+  alias: 'Simple Custom Element',
   section: 'Vanilla',
-  description: '# Vanilla component',
   path: '/timer-component.js',
   events: ['tick-tock']
 }

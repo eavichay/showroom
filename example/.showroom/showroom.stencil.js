@@ -1,10 +1,30 @@
 export default {
   section: 'Stencil',
   component: 'split-me',
-  innerHTML: `<div slot="0" style="background: red; height: 100%;"></div><div slot="1" style="background: blue; height: 100%;"></div>`,
-  outerHTML: `<div class="container" style="width: 100%; height: 250px;"><showroom-mount-point></showroom-mount-point></div>`,
+  alias: 'Stencil: <split-me>',
+  innerHTML: `
+    <div slot="0" style="background: var(--accent-color); height: 100%;">
+      <img src="https://www.ambient-it.net/wp-content/uploads/2018/07/stenciljs-175m.png">
+    </div>
+    <div slot="1" style="background: var(--accent-color); opacity: 0.7; height: 100%;">
+      <img src="https://www.ambient-it.net/wp-content/uploads/2018/07/stenciljs-175m.png">
+    </div>
+    <div slot="2" style="background: var(--accent-color); opacity: 0.5; height: 100%;">
+      <img src="https://www.ambient-it.net/wp-content/uploads/2018/07/stenciljs-175m.png">
+    </div>`,
+  outerHTML: `
+  
+  <style>
+    div:not(.container) {
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+  <div class="container" style="width: 100%; height: 250px;"><showroom-mount-point></showroom-mount-point></div>`,
   attributes: {
-    n: 2,
-    sizes: "0.50, 0.50"
+    n: 3,
+    sizes: "0.33, 0.33, 0.34"
   }
 }

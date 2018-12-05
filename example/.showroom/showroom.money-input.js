@@ -1,9 +1,9 @@
 export default {
   component: 'money-input',
+  alias: 'Extending Native Elements',
   section: 'Vanilla',
   path: '/money-input.js',
   events: ['change'],
-  description: '# Vanilla customized element',
 
   // customized element
   extends: 'input',

@@ -1,10 +1,20 @@
 const assert = require('assert');
 
-describe.only('API', () => {
+/**
+ * @typedef {import('../puppeteer').Showroom} Showroom
+ */
 
+describe('API', () => {
+
+  /**
+   * @type Showroom
+   */
   let showroom;
 
   beforeEach( () => {
+    /**
+     * @type Showroom
+     */
     showroom = showroomInstance;
   });
   
@@ -20,7 +30,7 @@ describe.only('API', () => {
     await showroom.test('demo-component-avengers');
     await showroom.setProperty('title', 'Hello');
     const actual = await showroom.getProperty('title');
-    assert(actual === 'Hello');
+    assert.equal(actual, 'Hello');
   });
 
   it('setAttribute/getAttribute/hasAttribute', async () => {
@@ -33,7 +43,7 @@ describe.only('API', () => {
   it('find', async () => {
     await showroom.test('demo-component-avengers');
     await showroom.setProperty('title', 'Hello');
-    const titleEl = await showroom.find('// div.container > h3');
+    const titleEl = await showroom.find('// h3');
     assert(await showroom.getTextContent(titleEl) === 'Hello');
   });
 

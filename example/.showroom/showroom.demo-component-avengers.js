@@ -1,5 +1,6 @@
 export default {
   section: 'Slim.js',
+  alias: 'slim.js component',
   descriptionURL: false, //'https://google.com',
   description: `
 # Demo Component

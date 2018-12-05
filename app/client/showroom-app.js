@@ -32,13 +32,20 @@ Slim.tag('showroom-app', class extends Slim {
   }
 
   loadComponentByHash () {
+    let found = false;
     this.sections && this.sections.forEach(section => {
       section.forEach((module) => {
-        if (`#${module.component}` === window.location.hash && this.currentModule !== module) {
-          this.onComponentSelected(module);
+        if (`#${module.component}` === window.location.hash) {
+          found = true;
+          if (this.currentModule !== module) {
+            this.onComponentSelected(module);
+          }
         }
-      })
+      });
     });
+    if (!found) {
+      this.descriptionView.setContent('# Oops.\nInvaliad URL. This route does not resolve to a registered component. \n\nTry selecting a component from the list instead.');
+    }
   }
 
   get useShadow () { return true; }
@@ -118,6 +125,7 @@ Slim.tag('showroom-app', class extends Slim {
       const components = await (await fetch('/.showroom-app/showroom-components')).json();
       for (let filename of components) {
         try {
+          this.descriptionView.setContent('# Loading...\n' + filename);
           module = (await import('/.showroom/' + filename)).default;
           const { path, section }  = module;
     
@@ -143,10 +151,12 @@ Slim.tag('showroom-app', class extends Slim {
         return sections[section];
       });
 
-      this.loadComponentByHash();
+      this.descriptionView.close();
 
     } catch (err) {
       this.descriptionView.setContent(createError(err));
+    } finally {
+      this.loadComponentByHash();
     }
   }
 

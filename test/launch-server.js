@@ -2,6 +2,10 @@ const path = require('path');
 const puppeteer = require('puppeteer');
 const showroomFactory = require('../puppeteer/index.js');
 
+/**
+ * @typedef {import('../puppeteer').Showroom} Showroom
+ */
+
 global.opts = {
   baseUrl: 'http://127.0.0.1:3001',
   headless: process.env.NODE_ENV !== 'development'

@@ -1,8 +1,10 @@
 dashboard.setAttribute('collapsed', '');
-showroom.setTestSubject('Welcome');
+if (!window.location.hash) showroom.setTestSubject('Welcome');
 
 setTimeout( () => {
-  window.location.hash = 'Welcome';
+  if (!window.location.hash) {
+    window.location.hash = 'Welcome';
+  }
 }, 5)
 
 setTimeout( () => {

@@ -9,6 +9,7 @@ const { search, getComponents } = require('./build-component-index');
 const chalk = require('chalk');
 const fs = require('fs');
 const { promisify } = require('util');
+const enforceHttps = require('koa-sslify');
 
 const lstat = promisify(fs.lstat);
 
@@ -86,6 +87,12 @@ async function startServer () {
   log('Expecting Showroom files to be at', global.showroom.path + '/.showroom')
   await search(path.resolve(process.cwd(), global.showroom.path, '.showroom'));
 
+  if (process.env.FORCE_SSL) {
+    process.exit(1);
+    app.use(enforceHttps({
+      trustProtoHeader: true
+    }));
+  }
 
   allowedPaths.forEach(path => {
     frontend.use(serve(path, serveStaticOptions));

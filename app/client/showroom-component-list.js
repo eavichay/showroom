@@ -22,12 +22,16 @@ Slim.tag('showroom-component-list',
   <summary>{{section.name}}</summary>
   <ul>
     <li s:repeat="section as item" bind:data-component-name="item.component">
-      <span click="onComponentClick">{{item.component}}</span>
+      <span click="onComponentClick">{{getAlias(item)}}</span>
       <button class="topcoat-button--large btn-sm" bind:style="getButtonStyle(item)" click="onDocsClick">DOCS</button>
     </li>
   </ul>
 </details>
 `, class extends Slim {
+
+  getAlias (module) {
+    return module.alias || module.component;
+  } 
 
   getButtonStyle (item) {
     if (item.description || item.descriptionURL) {
