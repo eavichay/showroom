@@ -68,7 +68,6 @@ async function preflight () {
     log(`.showroom folder located`);
   } else {
     log(chalk.red(`Could not locate .showroom folder in ${parentDir}`));
-    process.exit(-1);
   }
 }
 
