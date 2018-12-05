@@ -87,6 +87,7 @@ async function startServer () {
   await search(path.resolve(process.cwd(), global.showroom.path, '.showroom'));
 
   if (process.env.FORCE_SSL) {
+    console.log('Enforcing SSL');
     app.use(enforceHttps({
       trustProtoHeader: true
     }));
