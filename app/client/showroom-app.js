@@ -28,24 +28,12 @@ Slim.tag('showroom-app', class extends Slim {
 
   constructor () {
     super();
+    windw['showroomApp'] = this;
     window.addEventListener('hashchange', this.loadComponentByHash.bind(this));
   }
 
   loadComponentByHash () {
-    let found = false;
-    this.sections && this.sections.forEach(section => {
-      section.forEach((module) => {
-        if (`#${module.component}` === window.location.hash) {
-          found = true;
-          if (this.currentModule !== module) {
-            this.onComponentSelected(module);
-          }
-        }
-      });
-    });
-    if (!found) {
-      this.descriptionView.setContent('# Oops.\nInvaliad URL. This route does not resolve to a registered component. \n\nTry selecting a component from the list instead.');
-    }
+    this.findAndLoadComponent(window.location.hash);
   }
 
   get useShadow () { return true; }
@@ -105,6 +93,21 @@ Slim.tag('showroom-app', class extends Slim {
       <component-dashboard s:id="dashboard"></component-dashboard>
     </div>
     `;
+  }
+
+  findAndLoadComponent (name) {
+    let found = false;
+    this.sections && this.sections.forEach(section => {
+      section.forEach((module) => {
+        if (module.component === name) {
+          found = true;
+          this.onComponentSelected(module);
+        }
+      });
+    });
+    if (!found && window.location.hash) {
+      this.descriptionView.setContent('# Oops.\nInvaliad URL. This route does not resolve to a registered component. \n\nTry selecting a component from the list instead.');
+    }
   }
 
   onComponentSelected (data) {
