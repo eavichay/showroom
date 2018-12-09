@@ -8,7 +8,8 @@
     "dev": "nodemon ./app/server/index.js --path ./example --port 3000",
     "test": "mocha -R progress --timeout 15000",
     "serve": "node ./app/server/index.js --path ./example --port 80",
-    "prepublish": "jsdoc ./puppeteer/index.js test-utils.js README.md -d docs"
+    "docs": "jsdoc ./puppeteer/index.js test-utils.js README.md -d docs",
+    "prepublish": "npm run docs"
   },
   "repository": "https://github.com/eavichay/showroom",
   "bin": {

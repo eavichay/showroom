@@ -28,7 +28,7 @@ Slim.tag('showroom-app', class extends Slim {
 
   constructor () {
     super();
-    windw['showroomApp'] = this;
+    window['showroomApp'] = this;
   }
 
   loadComponentByHash () {

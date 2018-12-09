@@ -42,17 +42,23 @@ export default class ComponentRenderer extends HTMLElement {
 
   async render () {
     const {url, name } = this.attributes;
+    let range;
 
     if (url) await import(url);
     
-    const mountpoint = this._.querySelector('showroom-mount-point') || this.fallbackContainer;
-    if (mountpoint !== this.fallbackContainer) {
-      this.fallbackContainer.remove();
+    const prePlacedComponent = this._.querySelector(name.nodeValue);
+    if (!prePlacedComponent) {
+      const mountpoint = this._.querySelector('showroom-mount-point') || this.fallbackContainer;
+      if (mountpoint !== this.fallbackContainer) {
+        this.fallbackContainer.remove();
+      }
+      range = document.createRange();
+      range.selectNode(mountpoint);
+      range.deleteContents();
+      this.component = this.createElement(name.nodeValue, this.extending);
+    } else {
+      this.component = prePlacedComponent;
     }
-    const range = document.createRange();
-    range.selectNode(mountpoint);
-    range.deleteContents();
-    this.component = this.createElement(name.nodeValue, this.extending);
     Object.keys(this.targetAttributes).forEach(attr => {
       const value = this.targetAttributes[attr];
       if (typeof value === 'boolean' && value) {
@@ -62,7 +68,9 @@ export default class ComponentRenderer extends HTMLElement {
       }
     });
     // mountpoint.outerHTML = `<${name.nodeValue} ${attributesString}></${name.nodeValue}>`;
-    range.insertNode(this.component);
+    if (!prePlacedComponent) {
+      range.insertNode(this.component);
+    }
     window.showroomGlobalStyles.forEach(styleNode => {
       this._.appendChild(styleNode.cloneNode(true));
     });
