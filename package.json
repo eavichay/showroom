@@ -1,6 +1,6 @@
 {
   "name": "showroom",
-  "version": "0.8.4",
+  "version": "0.9.0",
   "description": "Interactive visual development and testing of custom elements",
   "main": "./app/server/index.js",
   "scripts": {
