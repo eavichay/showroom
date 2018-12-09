@@ -29,11 +29,10 @@ Slim.tag('showroom-app', class extends Slim {
   constructor () {
     super();
     windw['showroomApp'] = this;
-    window.addEventListener('hashchange', this.loadComponentByHash.bind(this));
   }
 
   loadComponentByHash () {
-    this.findAndLoadComponent(window.location.hash);
+    this.findAndLoadComponent(window.location.hash.slice(1));
   }
 
   get useShadow () { return true; }
@@ -95,19 +94,21 @@ Slim.tag('showroom-app', class extends Slim {
     `;
   }
 
-  findAndLoadComponent (name) {
-    let found = false;
+  async findAndLoadComponent (name) {
+    if (!name) {
+      return;
+    }
     this.sections && this.sections.forEach(section => {
       section.forEach((module) => {
         if (module.component === name) {
-          found = true;
           this.onComponentSelected(module);
         }
       });
     });
-    if (!found && window.location.hash) {
-      this.descriptionView.setContent('# Oops.\nInvaliad URL. This route does not resolve to a registered component. \n\nTry selecting a component from the list instead.');
-    }
+    // if (!found && window.location.hash) {
+    //   // window.location.hash = '';
+    //   this.descriptionView.setContent('# Oops.\nInvaliad URL. This route does not resolve to a registered component. \n\nTry selecting a component from the list instead.');
+    // }
   }
 
   onComponentSelected (data) {
@@ -155,7 +156,8 @@ Slim.tag('showroom-app', class extends Slim {
       });
 
       this.descriptionView.close();
-
+      window.addEventListener('hashchange', this.loadComponentByHash.bind(this));
+      this.loadComponentByHash();
     } catch (err) {
       this.descriptionView.setContent(createError(err));
     } finally {

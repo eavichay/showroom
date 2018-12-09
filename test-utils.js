@@ -107,7 +107,7 @@ class TestUtils {
     let lastTargetComponent = this.targetComponent;
     while (lastTargetComponent === this.targetComponent) {
       // @ts-ignore
-      await this.page.evaluate(((componentName) => showroom.setTestSubject(componentName)), componentName);
+      await this.page.evaluate((async (componentName) => await showroom.setTestSubject(componentName)), componentName);
       this.targetComponent = await this.testSubject();
     }
     return this.targetComponent;
