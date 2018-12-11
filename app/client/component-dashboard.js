@@ -187,6 +187,9 @@ export default class ComponentDashboard extends HTMLElement {
 
   attachEvents (target, eventList) {
     this.eventLog.logged = [];
+    if (target.$SHOWROOM_META_ATTACHED) {
+      return;
+    }
     if (eventList) {
       eventList.forEach(eventName => {
         target.addEventListener(eventName, (event) => {
@@ -205,6 +208,7 @@ export default class ComponentDashboard extends HTMLElement {
         });
       });
     }
+    target.$SHOWROOM_META_ATTACHED = true;
   }
 
   clearEvents () {
