@@ -1,5 +1,6 @@
 node_modules
 .vscode
+.idea
 package-lock.json
 .openode
 .nyc_output

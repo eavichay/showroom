@@ -11,7 +11,7 @@ class Showroom {
 
   async setTestSubject(component) {
     await this.ready;
-    window.location.hash = component;
+    await showroomApp.findAndLoadComponent(component);
   }
 
   setProperty(prop, value) {

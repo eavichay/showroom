@@ -2,6 +2,7 @@ example
 test
 docs
 .vscode
+.idea
 .nyc_output
 coverage
 .openode
