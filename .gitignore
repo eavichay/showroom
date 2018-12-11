@@ -5,3 +5,4 @@ package-lock.json
 .openode
 .nyc_output
 coverage
+docs
