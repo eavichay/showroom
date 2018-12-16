@@ -6,11 +6,44 @@ class Showroom {
         window.showroomReady.resolve = resolve;
       });
     });
+    this.inject();
     this.ready = window.showroomReady;
   }
 
+  find (path, component = this.component) {
+    return window.queryDeepSelector(path, component);
+  }
+
+  inject () {
+    if (!window.queryDeepSelector) {
+      /**
+       * @param {string} selectorStr
+       * @param {any} container
+       */
+      const queryDeepSelector = (selectorStr, container = document) => {
+        const selectorArr = selectorStr.replace(new RegExp('//', 'g'), '%split%//%split%').split('%split%');
+        for (const index in selectorArr) {
+          const selector = selectorArr[index].trim();
+
+          if (!selector) continue;
+
+          if (selector === '//') {
+            container = container.shadowRoot;
+          } else if (selector === 'document') {
+            container = document;
+          } else {
+            container = container.querySelector(selector);
+          }
+          if (!container) break;
+        }
+        return container;
+      };
+      window['queryDeepSelector'] = queryDeepSelector;
+    };
+  }
+
   async setTestSubject(component) {
-    await this.ready;
+    await window.showroomReady;
     await showroomApp.findAndLoadComponent(component);
   }
 

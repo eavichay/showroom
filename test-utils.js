@@ -73,6 +73,8 @@ class TestUtils {
 
             if (selector === '//') {
               container = container.shadowRoot;
+            } else if (selector === 'document') {
+              container = document;
             }
             else {
               container = container.querySelector(selector);
@@ -107,7 +109,10 @@ class TestUtils {
     let lastTargetComponent = this.targetComponent;
     while (lastTargetComponent === this.targetComponent) {
       // @ts-ignore
-      await this.page.evaluate((async (componentName) => await showroom.setTestSubject(componentName)), componentName);
+      lastTargetComponent = await this.page.evaluate((async (componentName) => {
+        await showroom.ready;
+        await showroom.setTestSubject(componentName)
+      }), componentName);
       this.targetComponent = await this.testSubject();
     }
     return this.targetComponent;
@@ -132,8 +137,9 @@ class TestUtils {
    * @returns Promise<Array<SerializedRemoteEvent>>
    */
   async getEventList () {
-    return await (await this.page.evaluate(() => {
+    return await (await this.page.evaluate(async () => {
       // @ts-ignore
+      await showroom.ready;
       return window.dashboard.events.map(({type, detail, bubbles}) => {
         return {
           type,

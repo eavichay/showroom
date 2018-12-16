@@ -266,6 +266,7 @@ export default class ComponentDashboard extends HTMLElement {
   }
 
   setupComponent (module) {
+    console.log('Loading component: ' + module.component);
     this.componentModule = module;
     const { functions, component, properties, attributes, events, innerHTML, outerHTML, centered, extends : isExtending } = module;
     if (centered) {

@@ -3,6 +3,7 @@ import { Slim } from '/.showroom-app/Slim.js';
 import './component-description.js';
 import './showroom-component-list.js';
 import './component-dashboard.js';
+import './router.js';
 
 export const createError = (err, module, filename) => `
 # _Oops_, Error.
@@ -86,7 +87,7 @@ Slim.tag('showroom-app', class extends Slim {
         <showroom-component-list
           s:repeat="sections as section"
           on-docs="onComponentDocs"
-          on-select="onComponentSelected"
+          bind:section-name="section.name"
           ></showroom-component-list>
       </div>
       <component-dashboard s:id="dashboard"></component-dashboard>
@@ -101,7 +102,9 @@ Slim.tag('showroom-app', class extends Slim {
     this.sections && this.sections.forEach(section => {
       section.forEach((module) => {
         if (module.component === name) {
-          this.onComponentSelected(module);
+          this.dashboard.setupComponent(module);
+          this.component = dashboard.targetComponent;
+          showroom.component = this.component;
         }
       });
     });
@@ -109,13 +112,6 @@ Slim.tag('showroom-app', class extends Slim {
     //   // window.location.hash = '';
     //   this.descriptionView.setContent('# Oops.\nInvaliad URL. This route does not resolve to a registered component. \n\nTry selecting a component from the list instead.');
     // }
-  }
-
-  onComponentSelected (data) {
-    window.location.hash = data.component;
-    this.currentModule = data;
-    this.dashboard.setupComponent(data);
-    window.showroom.component = this.dashboard.targetComponent;
   }
 
   onComponentDocs (description) {
@@ -156,8 +152,11 @@ Slim.tag('showroom-app', class extends Slim {
       });
 
       this.descriptionView.close();
-      window.addEventListener('hashchange', this.loadComponentByHash.bind(this));
-      this.loadComponentByHash();
+      const { router } = window;
+      router.addEventListener('change', ({detail}) => {
+        this.findAndLoadComponent(detail);
+      });
+      // this.loadComponentByHash();
     } catch (err) {
       this.descriptionView.setContent(createError(err));
     } finally {

@@ -15,19 +15,50 @@ Slim.tag('showroom-component-list',
     border-image-slice: 1;
     padding-bottom: 0.5rem;
   }
+  
+  li[is-selected="true"]::before {
+    display: inline;
+    position: absolute;
+    content: '>';
+  }
+  
+  li[is-selected="true"] > span {
+    left: 1rem;
+    position: relative;
+  }
 
   
 </style>
 <details open>
   <summary>{{section.name}}</summary>
   <ul>
-    <li s:repeat="section as item" bind:data-component-name="item.component">
+    <li s:repeat="section as item" bind:data-component-name="item.component" bind:is-selected="isSelected(currentComponent, item)">
       <span click="onComponentClick">{{getAlias(item)}}</span>
       <button class="topcoat-button--large btn-sm" bind:style="getButtonStyle(item)" click="onDocsClick">DOCS</button>
     </li>
   </ul>
 </details>
 `, class extends Slim {
+
+  constructor () {
+    super();
+    this.currentComponent = '';
+    window.router.addEventListener('change', ({detail}) => {
+      this.currentComponent = detail;
+      this.commit('currentComponent');
+    });
+  }
+
+  onRender () {
+    setTimeout( () => {
+      this.currentComponent = window.router.component;
+      this.commit('currentComponent');
+    });
+  }
+
+  isSelected (current, item) {
+    return current === item.component;
+  }
 
   getAlias (module) {
     return module.alias || module.component;
@@ -45,7 +76,7 @@ Slim.tag('showroom-component-list',
 
   onComponentClick (e) {
     const item = e.target.item;
-    this.callAttribute('on-select', item);
+    window.location.hash = item.component;
   }
 
   onDocsClick (e) {
