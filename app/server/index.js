@@ -58,7 +58,7 @@ async function bootstrap ({port = 3000, path = './', silent = false}) {
   await preflight();
   log(chalk.green('Starting server'));
   await startServer();
-  koaServer = app.listen(port);
+  koaServer = app.listen(port, '0.0.0.0');
 }
 
 async function preflight () {
