@@ -23,6 +23,14 @@ Supports:
 - Supports CI/CD queries for shadow-roots
 - Smooth pupeteer integration
 
+### Configuration
+
+The server following options:
+- `port (int)` - The port on which the server listens. Default is `3000`.
+- `path (string)` - The path, relative to the `process.cwd()`, used to search for project files. Default is `./`.
+- `silent (boolean)` - If true, completely disables logging. Default is `false`.
+- `verbose (boolean)` - If true, verbose messages will be logged. Otherwise only errors and warnings will be logged. Default it `false`.
+
 ### Build & Development
 `git clone git@github.com:eavichay/showroom.git`
 `npm install`

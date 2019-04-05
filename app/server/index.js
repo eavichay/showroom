@@ -6,10 +6,10 @@ const mount = require('koa-mount');
 const serve = require('koa-static');
 const yargs = require('yargs');
 const { search, getComponents } = require('./build-component-index');
-const chalk = require('chalk');
 const fs = require('fs');
 const { promisify } = require('util');
 const enforceHttps = require('koa-sslify');
+const logger = require('./logger');
 
 const lstat = promisify(fs.lstat);
 
@@ -23,14 +23,12 @@ const serveStaticOptions = {
   cacheControl: false
 };
 
-let { log } = console;
-
 if (require.main === module) {
   yargs
   .usage('$0 [--path] [--port]', '', (yargs) => {}, (argv) => {
         global.showroom = {
           verbose: argv.verbose,
-          silent: false,
+          silent: argv.silent,
           port: argv.port,
           path: argv.path
         };
@@ -39,6 +37,8 @@ if (require.main === module) {
           path: argv.path
         });
     })
+  .default('verbose', false)
+  .default('silent', false)
   .default('port', '3000')
   .default('path', './')
   .help()
@@ -52,11 +52,8 @@ async function bootstrap ({port = 3000, path = './', silent = false}) {
       port,
       silent
     });
-  if (silent) {
-    log = () => {};
-  }
   await preflight();
-  log(chalk.green('Starting server'));
+  logger.info('Starting server');
   await startServer();
   koaServer = app.listen(process.env.PORT || port);
 }
@@ -65,13 +62,13 @@ async function preflight () {
   const parentDir = path.resolve(process.cwd(), global.showroom.path);
   const dir = path.resolve(process.cwd(), global.showroom.path, '.showroom');
   if (fs.existsSync(dir) && (await lstat(dir)).isDirectory()) {
-    log(`.showroom folder located`);
+    logger.info(`.showroom folder located`);
   } else {
-    log(chalk.red(`Could not locate .showroom folder in ${parentDir}`));
+    logger.error(`Could not locate .showroom folder in ${parentDir}`);
   }
 }
 
-async function startServer () { 
+async function startServer () {
   const dir = (module, ...rest) => path.join(path.dirname(require.resolve(module)), ...rest);
   const allowedPaths = [
     path.join(__dirname, '/../client'),
@@ -83,11 +80,11 @@ async function startServer () {
     global.showroom.path,
   ];
 
-  log('Expecting Showroom files to be at', global.showroom.path + '/.showroom')
+  logger.info('Expecting Showroom files to be at', global.showroom.path + '/.showroom')
   await search(path.resolve(process.cwd(), global.showroom.path, '.showroom'));
 
   if (process.env.FORCE_SSL) {
-    console.log('Enforcing SSL');
+    logger.info('Enforcing SSL');
     app.use(enforceHttps({
       trustProtoHeader: true
     }));
@@ -141,7 +138,7 @@ async function startServer () {
 
   // attempt serving backend files
   app.use(mount('/', backend));
-  
+
   return true;
 }
 

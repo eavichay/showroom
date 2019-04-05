@@ -1,9 +1,9 @@
 const fs = require('fs');
 const { promisify } = require('util');
 const readdir = promisify(fs.readdir);
-const chalk = require('chalk');
 const lstat = promisify(fs.lstat);
 const path = require('path');
+const logger = require('./logger');
 
 let componentList = [];
 
@@ -22,23 +22,12 @@ function debounce(func, wait, immediate) {
   };
 };
 
-const info = (...args) => {
-  if (global.showroom.verbose) {
-    log(...args);
-  }
-}
-
 let watcher;
-const log = (...args) => {
-  if (!global.showroom.silent) {
-    console.log(...args);
-  }
-}
 
 const doSearch = async (rootPath) => {
-  info('Searching in', rootPath);
+  logger.info('Searching in', rootPath);
   const files = (await readdir(rootPath)).sort();
-  console.log(files);
+  logger.info(`Found files: ${files}`);
   await Promise.all(files.map(async filename => {
     const filePath = path.join(rootPath, filename);
     const stats = await lstat(filePath);
@@ -47,11 +36,11 @@ const doSearch = async (rootPath) => {
         await doSearch(filePath);
       }
     } else if (stats.isFile() && filename !== 'config.js') {
-      info(`\t${filename}`);
+      logger.info(`\tAdding: ${filename}`);
       componentList.push(filename);
     }
   }));
-  log(chalk.yellow(`${componentList.length} Total file(s) found in .showroom folder`));
+  logger.warn(`${componentList.length} Total file(s) found in .showroom folder`);
   return componentList;
 };
 
@@ -63,7 +52,7 @@ module.exports = {
       if (!global.noWatch) {
         watcher = fs.watch(root, {}, debounce((e, f) => {
         componentList = [];
-        if (!global.showroom.silent) log(chalk.yellow(`Filesystem change detected... scanning .showroom folder`));
+        logger.warn(`Filesystem change detected... scanning .showroom folder`);
         doSearch(root, silent);
         }, 150));
       }
